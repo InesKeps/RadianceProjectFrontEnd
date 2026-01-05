@@ -80,10 +80,10 @@ export function DataTable<TData, TValue>({
     <div>
       <Card className="bg-[#f7f9fa]">
           <CardHeader>
-            <CardTitle>Liste des patients</CardTitle>
+            <CardTitle>Consultations</CardTitle>
             <CardDescription>
               <Input
-                placeholder="Rechercher un patient..."
+                placeholder="Rechercher une consultation..."
                 value={(table.getColumn("nom")?.getFilterValue() as string) ?? ""}
                 onChange={(event) =>
                 table.getColumn("nom")?.setFilterValue(event.target.value)
@@ -94,16 +94,16 @@ export function DataTable<TData, TValue>({
             <CardAction>
               <button 
                 type="button"
-                onClick={() => Navigate("/admin/addpatient-form")}
+                onClick={() => Navigate("/admin/adduser-form")}
                 className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-md">
-                Ajouter un patient
+                Ajouter une consultation
               </button>
             </CardAction>
           </CardHeader>
           <CardContent>
             <div className="overflow-hidden bg-white rounded-md border">
                 <Table>
-                    <TableHeader>
+                    <TableHeader className="bg-[#f7f9fa]">
                         {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
@@ -147,9 +147,9 @@ export function DataTable<TData, TValue>({
             </div>
           </CardContent>
           <CardFooter>
-            <div className="flex justify-between items-center w-full gap-4 px-2">
-              <div className="flex gap-2 text-sm">
-                <p className="font-medium">Nombre total de Patients:</p>
+            <div className="flex items-center justify-between px-2">
+                <div className="flex gap-2 text-sm">
+                <p className="font-medium">Nombre total de Consultations:</p>
                 <b>{data.length}</b>
               </div>
               <div className="flex items-center space-x-6 lg:space-x-8">

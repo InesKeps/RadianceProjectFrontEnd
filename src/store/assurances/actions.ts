@@ -86,7 +86,7 @@ export const updateAssurance = createAsyncThunk<ApiResponse<Assurance>, Assuranc
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/assurances/update/${data.id}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             accept: "application/json",
             "Content-Type": "application/json",

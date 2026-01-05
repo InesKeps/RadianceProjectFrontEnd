@@ -3,7 +3,7 @@
 // import { Outlet } from "react-router";
 // import Header from "./header";
 import { AppSidebar } from "@/components/app-sidebar"
-import { SiteHeader } from "@/components/myComponents/site-header"
+import { SiteHeader } from "@/components/site-header"
 import {
   SidebarInset,
   SidebarProvider,

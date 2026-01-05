@@ -1,16 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
-import type { Patient, PatientDetails, PatientDto, PatientDtoUpdate } from "../../types/patient";
+import type { Antecedent, AntecedentDto, AntecedentDtoUpdate, AssuranceDtoUpdate } from "../../types/historique";
 import type { ApiResponse } from "../../types/base";
 
-export const getAllPatients = createAsyncThunk<ApiResponse<Patient[]>,void,{state: RootState}>(
-  "user/getAllPatients",
+export const getAllAntecedents = createAsyncThunk<ApiResponse<Antecedent[]>,void,{state: RootState}>(
+  "assurance/getAllAntecedents",
   async (_,apiThunk) => {
     try {
       const token = apiThunk.getState().auth.userInfo?.token;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/patients`,
+        `${import.meta.env.VITE_API_URL}/antecedents`,
         {
           method: "GET",
           headers: {
@@ -22,61 +22,31 @@ export const getAllPatients = createAsyncThunk<ApiResponse<Patient[]>,void,{stat
 
       if (!response.ok) {
         const error = await response.json();
-        console.log("Failed to get all patients: ", error);
-        return apiThunk.rejectWithValue("Failed to get all patients.");
+        console.log("Failed to get all antecedents: ", error);
+        return apiThunk.rejectWithValue("Failed to get all antecedents.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all patients: ", error);
+      console.log("Error on get all antecedents: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
-          "Error on get all patients."
+          "Error on get all antecedents."
       );
     }
   }
 );
 
-export const getPatientDetails = createAsyncThunk<ApiResponse<PatientDetails>,number,{ state: RootState }>(
-  "patient/getPatientDetails",
-  async (id, apiThunk) => {
-    try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/patients/details/${id}`, {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get patient details: ", error);
-        return apiThunk.rejectWithValue("Failed to get patient details.");
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      return apiThunk.rejectWithValue(
-        (error as { message: string }).message || "Error on get patient details."
-      );
-    }
-  }
-);
-
-export const createPatient = createAsyncThunk<ApiResponse<Patient>, PatientDto,{state: RootState}>(
-  "user/createPatient",
+export const createAntecedent = createAsyncThunk<ApiResponse<Antecedent>, AntecedentDto,{state: RootState}>(
+  "assurance/createAntecedent",
   async (data,apiThunk) => {
 
     try {
       const token = apiThunk.getState().auth.userInfo?.token;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/patients/create`,
+        `${import.meta.env.VITE_API_URL}/antecedents/create`,
         {
           method: "POST",
           headers: {
@@ -90,67 +60,68 @@ export const createPatient = createAsyncThunk<ApiResponse<Patient>, PatientDto,{
 
       if (!response.ok) {
         const error = await response.json();
-        console.log("Failed to create patient: ", error);
-        return apiThunk.rejectWithValue("Failed to create patient.");
+        console.log("Failed to create antecedent: ", error);
+        return apiThunk.rejectWithValue("Failed to create antecedent.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create patient: ", error);
+      console.log("Error on create antecedent: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
-          "Error on create patient."
+          "Error on create antecedent."
       );
     }
   }
 );
 
-export const updatePatient = createAsyncThunk<ApiResponse<Patient>,PatientDtoUpdate,{state: RootState}>(
-  "user/updatePatient", 
-  async (data, apiThunk) => {
-    
-  try {
-    const token = apiThunk.getState().auth.userInfo?.token;
+export const updateAntecedent = createAsyncThunk<ApiResponse<Antecedent>, AntecedentDtoUpdate,{state: RootState}>(
+  "assurance/updateAntecedent",
+  async (data,apiThunk) => {
 
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/patients/update/${data.id}`,
-      {
-        method: "PUT",
-        headers: {
+    try {
+      const token = apiThunk.getState().auth.userInfo?.token;
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/antecedents/update/${data.id}`,
+        {
+          method: "PUT",
+          headers: {
             accept: "application/json",
             "Content-Type": "application/json",
             Authorization: token ? `Bearer ${token}` : "",
-        },
-        body: JSON.stringify(data),
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.log("Failed to update antecedent: ", error);
+        return apiThunk.rejectWithValue("Failed to update antecedent.");
       }
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.log("Failed to update patient: ", error);
-      return apiThunk.rejectWithValue("Failed to update patient.");
+      
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.log("Error on update antecedent: ", error);
+      return apiThunk.rejectWithValue(
+        (error as { message: string }).message ||
+          "Error on update antecedent."
+      );
     }
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.log("Error on updating patient: ", error);
-    return apiThunk.rejectWithValue(
-      (error as { message: string }).message || "Error on updating patient."
-    );
   }
-});
+);
 
-
-export const deletePatient = createAsyncThunk<ApiResponse<Patient>, number,{state: RootState}>(
-  "user/deletePatient",
+export const deleteAntecedent = createAsyncThunk<ApiResponse<Antecedent>, number,{state: RootState}>(
+  "user/deleteAntecedent",
   async (id, apiThunk) => {
     try {
       const token = apiThunk.getState().auth.userInfo?.token;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/patients/delete/${id}`,
+        `${import.meta.env.VITE_API_URL}/antecedents/delete/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -163,17 +134,19 @@ export const deletePatient = createAsyncThunk<ApiResponse<Patient>, number,{stat
 
       if (!response.ok) {
         const error = await response.json();
-        console.log("Failed to delete patient: ", error);
-        return apiThunk.rejectWithValue("Failed to delete patient.");
+        console.log("Failed to delete antecedent: ", error);
+        return apiThunk.rejectWithValue("Failed to delete antecedent.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on delete patient: ", error);
+      console.log("Error on delete antecedent: ", error);
       return apiThunk.rejectWithValue(
-        (error as { message: string }).message || "Error on delete patient."
+        (error as { message: string }).message || "Error on delete antecedent."
       );
     }
   }
 );
+
+

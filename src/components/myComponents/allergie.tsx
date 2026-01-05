@@ -58,18 +58,18 @@ const Allergie = () => {
                 <Card className="bg-[#f7f9fa] p-4">
                     <CardAction className="flex absolute right-4 top-4 gap-2">
                         <DialogTrigger asChild>
-                        <button className="text-[#0DABCB] text-xl hover:text-[#07c6ec] cursor-pointer"><IoAdd /></button>
+                        <button className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-sm rounded-sm hover:bg-[#07c6ec] cursor-pointer">Ajouter</button>
                         </DialogTrigger>
                     </CardAction>
-                    <CardTitle className="flex justify-between px-2">Allergies</CardTitle>
+                    <CardTitle className="flex justify-between px-2">Allergies: <b className="text-black">{patientDetails?.allergie.length}</b></CardTitle>
                     <CardContent>
                     {patientDetails?.allergie?.length ? (
                     patientDetails.allergie.map((all) => (
                         <div className="flex justify-between border-b py-2">
                             <p key={all.id}>{all.nomAllergie}</p>
                             <div className="flex gap-2">
-                            <button className="text-[#0DABCB] hover:text-[#07c6ec] cursor-pointer"><FaRegEdit /></button>
-                            <button className="text-red-500 hover:text-red-600 cursor-pointer"><MdDeleteOutline /></button>
+                            <button className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-[#07c6ec] cursor-pointer">Modifier</button>
+                            <button className="bg-red-500 text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-red-600 cursor-pointer">Supprimer</button>
                             </div>
                         </div>
                         // <p key={all.id} className="border-b py-2">{all.nomAllergie}</p>

@@ -54,7 +54,7 @@ export const assuranceSlice = createSlice({
       .addCase(getAllAssurances.rejected, (state, action) => {
         state.status.getAll = "failed";
         if (action.payload) {
-          state.error.getAll = { message: "Failed to fetch assurances" };
+          state.error.getAll = { message: "Failed to getAll assurances" };
         }
       });
 

@@ -6,7 +6,6 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
-import { IoAdd } from "react-icons/io5";
 import useAppDispatch from "@/hooks/useAppDispatch";
 import useAppSelector from "@/hooks/useAppSelector";
 import type { RootState } from "@/store/store";
@@ -40,14 +39,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { toast } from "sonner";
-import { assuranceSchema } from "./addpatient";
-import Input from "@/components/myComponents/input";
-import type { AssuranceDto } from "@/types/historique";
-import type { AssuranceDtoUpdate } from "@/types/historique";
-import { createAssurance, deleteAssurance } from "@/store/assurances/actions";
 import Assurance from "@/components/myComponents/assurance";
 import Antecedent from "@/components/myComponents/antecedent";
 import Allergie from "@/components/myComponents/allergie";
+import Consultation from "@/components/myComponents/consultation";
 
 const DetailsPatient = () => {
   const { id } = useParams();
@@ -80,63 +75,6 @@ const DetailsPatient = () => {
     toast.error("Echec de suppression du Patient.");
     }
   };
-
-  // const assuranceInitialValues : AssuranceDto = {
-  //   type: "",
-  //   matricule: "",
-  //   adresse: "",
-  //   patientId: Number(patientDetails.id),
-  // };
-
-  // const handleSubmitAssurance = async (
-  //   values: AssuranceDto,
-  //   formikHelpers: FormikHelpers<AssuranceDto>
-  //   ) => {
-  //   formikHelpers.setSubmitting(true);
-  //   const response = await dispatch(createAssurance(values));
-
-  //   if (response.meta.requestStatus === "fulfilled") {
-  //       toast.success("Assurance ajoutée avec succès.");
-  //       formikHelpers.resetForm();
-  //       window.location.reload();
-  //   }
-
-  //   if (response.meta.requestStatus === "rejected") {
-  //       toast.error("Echec d'ajout de l'assurance.");
-  //   }
-
-  //   formikHelpers.setSubmitting(false);
-  // };
-
-  // const OpenFormUpdate = (id:number) =>{
-  //   let assToUpdate;
-  //   for (let i = 0; i < patientDetails.assurance.length; i++) {
-  //     if (patientDetails.assurance[i].id === id) {
-  //       assToUpdate = patientDetails.assurance[i]; 
-  //     }
-  //   }
-  //   console.log(assToUpdate);
-
-  //   const assuranceToUpdateInitialValues :AssuranceDtoUpdate  = {
-  //     id: Number(patientDetails.id),
-  //     type: assToUpdate!.type,
-  //     matricule: assToUpdate!.matricule,
-  //     adresse: assToUpdate!.adresse,
-  //   };
-  // }
-
-  // const handleDeleteAssurance = async (id:number)=>{
-  //   const response = await dispatch(deleteAssurance(id));
-
-  //   if (response.meta.requestStatus === "fulfilled") {
-  //   toast.success("Assurance supprimée avec succès.");
-  //   window.location.reload();
-  //   }
-
-  //   if (response.meta.requestStatus === "rejected") {
-  //   toast.error("Echec de suppression de l'assurance.");
-  //   }
-  // };
 
   return (
     <section className="flex flex-col gap-4 p-4 w-full h-full relative">
@@ -177,35 +115,13 @@ const DetailsPatient = () => {
           </Card>
 
           <div className="flex flex-col gap-4 w-3/4 h-[80vh] overflow-y-auto">
-
             <Assurance/>
 
             <Antecedent/>
 
             <Allergie/>
 
-            {/* Consultations */}
-            <Card className="bg-[#f7f9fa] p-4">
-              <CardTitle className="flex justify-between px-2">
-                <p>Consultations</p>
-                <button className="text-[#0DABCB] text-xl hover:text-[#07c6ec] cursor-pointer"><IoAdd /></button>
-              </CardTitle>
-              <CardContent>
-                {patientDetails.consultation?.length ? (
-                  patientDetails.consultation.map((c) => (
-                    <div key={c.id} className="border-b py-2">
-                      <p><span className="font-medium">Motif:</span> {c.motif}</p>
-                      <p>
-                        <span className="font-medium">Date:</span>{" "}
-                        {format(new Date(c.dateHeure), "dd/MM/yyyy HH:mm", { locale: fr })}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500">Aucune consultation</p>
-                )}
-              </CardContent>
-            </Card>
+            <Consultation/>
           </div>
           <AlertDialogContent>
           <AlertDialogHeader>

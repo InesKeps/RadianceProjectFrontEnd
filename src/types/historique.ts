@@ -1,19 +1,10 @@
-export interface Allergie {
-  id: Number;
-  nomAllergie: string; 
-  patientId: Number;     
-}
+
 
 // export interface AllergieDto {
 //   nomAllergie: string; 
 //   patientId: Number;     
 // }
 
-export interface Antecedent {
-  id: Number;
-  nomAntecedent: string;     
-  patientId: Number;  
-}
 
 // export interface AntecedentDto {
 //   id: Number;
@@ -29,12 +20,26 @@ export interface Assurance {
   patientId: Number;
 }
 
-export interface AntecedentDto {
+export interface Antecedent {
+  id: Number;
   nomAntecedent: string;     
+  patientId: Number;  
+}
+
+export interface Allergie {
+  id: Number;
+  nomAllergie: string; 
+  patientId: Number;     
+}
+
+export interface AntecedentDto {
+  nomAntecedent: string;   
+  patientId: Number;  
 }
 
 export interface AllergieDto {
-  nomAllergie: string;     
+  nomAllergie: string; 
+  patientId: Number;      
 }
 
 export interface AssuranceDto {
@@ -44,15 +49,16 @@ export interface AssuranceDto {
   patientId: Number;  
 }
 
-// export interface AntecedentDtoupdate {
-//   nomAntecedent: string;      
-// }
-
 export interface AssuranceDtoUpdate {
   id: number;
   type: string;
   matricule: string;
   adresse: string;
+}
+
+export interface AntecedentDtoUpdate {
+  id: number;
+  nomAntecedent: string;   
 }
 
 export type Sexe = "M" | "F";
