@@ -1,17 +1,3 @@
-
-
-// export interface AllergieDto {
-//   nomAllergie: string; 
-//   patientId: Number;     
-// }
-
-
-// export interface AntecedentDto {
-//   id: Number;
-//   nomAntecedent: string;     
-//   patientId: Number;  
-// }
-
 export interface Assurance {
   id: Number;
   type: string;
@@ -59,6 +45,11 @@ export interface AssuranceDtoUpdate {
 export interface AntecedentDtoUpdate {
   id: number;
   nomAntecedent: string;   
+}
+
+export interface AllergieDtoUpdate {
+  id: number;
+  nomAllergie: string;   
 }
 
 export type Sexe = "M" | "F";

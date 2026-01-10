@@ -12,8 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import useAppDispatch from "@/hooks/useAppDispatch";
-import { deleteUser } from "@/store/users/actions";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router"
 import type { User } from "@/types/user"
 import {
@@ -36,6 +34,10 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "dateTime",
     header: "Date et Heure",
+  },
+  {
+    accessorKey: "nomPatient",
+    header: "Nom du patient",
   },
   {
     accessorKey: "motif",

@@ -211,9 +211,9 @@ const Assurance = () => {
                             <Button variant="outline">Annuler</Button>
                             </DialogClose>
                             <DialogClose asChild className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 hover:text-black cursor-pointer text-white font-medium px-3 py-1 rounded-full w-1/2">
-                            <Button type="submit" disabled={formik.isSubmitting}>
-                                Modifier
-                            </Button>
+                              <Button type="submit" disabled={formik.isSubmitting}>
+                                  Modifier
+                              </Button>
                             </DialogClose>
                         </DialogFooter>
                     </Form>

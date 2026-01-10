@@ -5,13 +5,19 @@ import patientSlice from "./patients/slice";
 import { logoutAction } from "./auth/actions";
 import allergieSlice from "./allergies/slice";
 import assuranceSlice from "./assurances/slice";
+import antecedentSlice from "./antecedents/slice";
+import motifSlice from "./motifs/slice";
+import consultationSlice from "./consultations/slice";
 
 const appReducer = combineReducers({
   [authSlice.name]: authSlice.reducer,
   [userSlice.name]: userSlice.reducer,
   [patientSlice.name]: patientSlice.reducer,
+  [antecedentSlice.name]: antecedentSlice.reducer,
   [allergieSlice.name]: allergieSlice.reducer,
   [assuranceSlice.name]: assuranceSlice.reducer,
+  [consultationSlice.name]: consultationSlice.reducer,
+  [motifSlice.name]: motifSlice.reducer,
 });
 
 const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: any) => {

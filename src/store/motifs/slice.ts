@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  getAllAllergies,
-  createAllergie,
-  updateAllergie,
-  deleteAllergie,
+  getAllMotifs,
+  createMotif,
+  updateMotif,
+  deleteMotif,
 } from "./actions";
 import type { ApiError, statusType } from "../../types/base";
-import type { Allergie } from "../../types/historique";
+import type { Motif } from "@/types/data";
 
-export interface AllergieState {
-  items: Allergie[];
+export interface MotifState {
+  items: Motif[];
   status: {
     getAll: statusType;
     create: statusType;
@@ -24,7 +24,7 @@ export interface AllergieState {
   };
 }
 
-const initialState: AllergieState = {
+const initialState: MotifState = {
   items: [],
   status: {
     getAll: "idle",
@@ -40,41 +40,41 @@ const initialState: AllergieState = {
   },
 };
 
-export const allergieSlice = createSlice({
-  name: "allergie",
+export const motifSlice = createSlice({
+  name: "motif",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getAllAllergies.pending, (state) => {
+      .addCase(getAllMotifs.pending, (state) => {
         state.status.getAll = "pending";
         state.error.getAll = { message: null };
       })
-      .addCase(getAllAllergies.fulfilled, (state, action) => {
+      .addCase(getAllMotifs.fulfilled, (state, action) => {
         state.status.getAll = "succeeded";
         if (action.payload) {
           state.items = action.payload.data;
         }
       })
-      .addCase(getAllAllergies.rejected, (state, action) => {
+      .addCase(getAllMotifs.rejected, (state, action) => {
         state.status.getAll = "failed";
         if (action.payload) {
-          state.error.getAll = { message: "Failed to fetch patients" };
+          state.error.getAll = { message: "Failed to fetch motifs" };
         }
       });
 
     builder
-      .addCase(createAllergie.pending, (state) => {
+      .addCase(createMotif.pending, (state) => {
         state.status.create = "pending";
         state.error.create = { message: null };
       })
-      .addCase(createAllergie.fulfilled, (state, action) => {
+      .addCase(createMotif.fulfilled, (state, action) => {
         state.status.create = "succeeded";
         if (action.payload) {
           state.items.unshift(action.payload.data);
         }
       })
-      .addCase(createAllergie.rejected, (state, action) => {
+      .addCase(createMotif.rejected, (state, action) => {
         state.status.create = "failed";
         if (action.payload) {
           state.error.create = { message: "Failed to create patient" };
@@ -82,11 +82,11 @@ export const allergieSlice = createSlice({
       });
 
     builder
-      .addCase(updateAllergie.pending, (state) => {
+      .addCase(updateMotif.pending, (state) => {
         state.status.update = "pending";
         state.error.update = { message: null };
       })
-      .addCase(updateAllergie.fulfilled, (state, action) => {
+      .addCase(updateMotif.fulfilled, (state, action) => {
         state.status.update = "succeeded";
         const id = action.payload?.data.id;
         if (action.payload) {
@@ -95,19 +95,19 @@ export const allergieSlice = createSlice({
           );
         }
       })
-      .addCase(updateAllergie.rejected, (state, action) => {
+      .addCase(updateMotif.rejected, (state, action) => {
         state.status.update = "failed";
         if (action.payload) {
           state.error.update = { message: "Failed to update patient" };
         }
       });
-
+    
     builder
-      .addCase(deleteAllergie.pending, (state) => {
+      .addCase(deleteMotif.pending, (state) => {
         state.status.delete = "pending";
         state.error.delete = { message: null };
       })
-      .addCase(deleteAllergie.fulfilled, (state, action) => {
+      .addCase(deleteMotif.fulfilled, (state, action) => {
         state.status.delete = "succeeded";
         if (action.payload) {
           state.items = state.items.filter(
@@ -115,7 +115,7 @@ export const allergieSlice = createSlice({
           );
         }
       })
-      .addCase(deleteAllergie.rejected, (state, action) => {
+      .addCase(deleteMotif.rejected, (state, action) => {
         state.status.delete = "failed";
         if (action.payload) {
           state.error.delete = { message: "Failed to delete patient" };
@@ -124,4 +124,4 @@ export const allergieSlice = createSlice({
   },
 });
 
-export default allergieSlice;
+export default motifSlice;
