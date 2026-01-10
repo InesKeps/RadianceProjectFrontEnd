@@ -41,8 +41,8 @@ const data = {
        icon: <FaClipboardList/>,
      },
      {
-       title: "Agenda",
-       url: "/admin/agenda",
+       title: "Consultation",
+       url: "/admin/consultation",
        icon: <FaCalendarAlt/>,
      },
      {

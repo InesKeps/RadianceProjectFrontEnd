@@ -2,7 +2,9 @@ import useAppSelector from "@/hooks/useAppSelector";
 import type { RootState } from "@/store/store";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -11,7 +13,6 @@ import { Formik, Form, type FormikHelpers, Field, FieldArray } from "formik";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardAction,
   CardTitle
 } from "@/components/ui/card";
@@ -57,13 +58,15 @@ const Antecedent = () => {
         }
     }, [antId]);
 
+    const antecedentToUpdateInitialValues: AntecedentDtoUpdate = formUpdateAnt!;
+
     const OpenFormUpdate = () =>{
         console.log(antId);
         setActive("second");
         setOpen(true);
+        console.log(antecedentToUpdateInitialValues);
+        
     };
-
-    const antecedentToUpdateInitialValues: AntecedentDtoUpdate = formUpdateAnt!;
 
     const handleSubmitAntecedent = async (
         values: {antecedents: string[]},
@@ -107,7 +110,7 @@ const Antecedent = () => {
         if (response.meta.requestStatus === "fulfilled") {
         toast.success("Antecedent modifiée avec succès.");
         console.log("success");
-        // window.location.reload();
+        window.location.reload();
         }
     
         if (response.meta.requestStatus === "rejected") {
@@ -149,11 +152,11 @@ const Antecedent = () => {
                         {patientDetails?.antecedent?.length ? (
                         patientDetails.antecedent.map((ant) => (
                             <div className="flex justify-between border-b py-2">
-                            <p key={ant.id}>{ant.nomAntecedent}</p>
-                            <div className="flex gap-2">
-                                <button onClick={() => {setAntId(ant.id); OpenFormUpdate();}} className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-[#07c6ec] cursor-pointer">Modifier</button>
-                                <AlertDialogTrigger onClick={()=>handleIdToDelete(Number(ant.id))} className="bg-red-500 text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-red-600 cursor-pointer">Supprimer</AlertDialogTrigger>
-                            </div>
+                                <p key={ant.id}>{ant.nomAntecedent}</p>
+                                <div className="flex gap-2">
+                                    <button onClick={() => {setAntId(ant.id); OpenFormUpdate();}} className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-[#07c6ec] cursor-pointer">Modifier</button>
+                                    <AlertDialogTrigger onClick={()=>handleIdToDelete(Number(ant.id))} className="bg-red-500 text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-red-600 cursor-pointer">Supprimer</AlertDialogTrigger>
+                                </div>
                             </div>
                         ))
                         ) : (
@@ -170,30 +173,31 @@ const Antecedent = () => {
                         <Formik initialValues={antecedentInitialValues} validationSchema={antecedentSchema} onSubmit={handleSubmitAntecedent}>
                             {(formik) => (
                             <Form className="flex flex-col gap-6 w-[90%] mx-auto">
-                                <CardContent>
-                                    <FieldArray name="antecedents">
-                                        {({ push, remove }) => (
-                                        <div className="flex flex-col gap-3">
-                                        {formik.values.antecedents.map((_: any, index: any) => (
-                                        <div className="flex gap-2" key={index}>
-                                        <Field
-                                        className="w-full outline-none py-1 px-3 shadow-sm bg-white rounded-full placeholder:text-xs"
-                                        name={`antecedents[${index}]`}
-                                        placeholder="Entrer l'antécédent"
-                                        />
-                                        <button type="button"  onClick={() => remove(index)} className="cursor-pointer hover:text-red-500">Supprimer</button>
-                                        </div>
-                                        ))}
-                                        <button type="button" onClick={() => push("")} className="text-[#0DABCB] hover:text-[#00cff8] font-medium cursor-pointer">Ajouter un antécédent</button>
-                                        </div>
-                                        )}
-                                    </FieldArray>
-                                </CardContent>
-                                <CardFooter className="flex gap-4 items-center justify-center py-4">
+                                <FieldArray name="antecedents">
+                                    {({ push, remove }) => (
+                                    <div className="flex flex-col gap-3">
+                                    {formik.values.antecedents.map((_: any, index: any) => (
+                                    <div className="flex gap-2" key={index}>
+                                    <Field
+                                    className="w-full outline-none py-1 px-3 shadow-sm bg-white rounded-full placeholder:text-xs"
+                                    name={`antecedents[${index}]`}
+                                    placeholder="Entrer l'antécédent"
+                                    />
+                                    <button type="button"  onClick={() => remove(index)} className="cursor-pointer hover:text-red-500">Supprimer</button>
+                                    </div>
+                                    ))}
+                                    <button type="button" onClick={() => push("")} className="text-[#0DABCB] hover:text-[#00cff8] font-medium cursor-pointer">Ajouter un antécédent</button>
+                                    </div>
+                                    )}
+                                </FieldArray>
+                                <DialogFooter className="flex gap-4 items-center justify-center py-4">
+                                    <DialogClose asChild className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-full w-1/2">
+                                        <Button variant="outline">Annuler</Button>
+                                    </DialogClose>
                                     <button type="submit" disabled={formik.isSubmitting} className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-full w-full">
                                         Enregistrer
                                     </button>
-                                </CardFooter>
+                                </DialogFooter>
                             </Form>
                             )}
                         </Formik>
@@ -207,14 +211,17 @@ const Antecedent = () => {
                         <Formik initialValues={antecedentToUpdateInitialValues} validationSchema={antecedentSchema} onSubmit={handleUpdateAntecedent}>
                             {(formik) => (
                             <Form className="flex flex-col gap-6 w-[90%] mx-auto">
-                                <CardContent>
-                                    <Input label="Nom de l'Antécédent" name="antecedent" type="text" placeholder="Entrez le nom de l'antécédent"/>
-                                </CardContent>
-                                <CardFooter className="flex gap-4 items-center justify-center py-4">
-                                    <button type="submit" disabled={formik.isSubmitting} className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-full w-full">
-                                        Modifier
-                                    </button>
-                                </CardFooter>
+                                <Input label="Nom de l'Antécédent" name="nomAntecedent" type="text" placeholder="Entrez le nom de l'antécédent"/>
+                                <DialogFooter className="flex gap-4 items-center justify-center py-4">
+                                    <DialogClose asChild className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-full w-1/2">
+                                        <Button variant="outline">Annuler</Button>
+                                    </DialogClose>
+                                    <DialogClose asChild className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-full w-1/2">
+                                        <Button type="submit" disabled={formik.isSubmitting}>
+                                            Modifier
+                                        </Button>
+                                    </DialogClose>
+                                </DialogFooter>
                             </Form>
                             )}
                         </Formik>

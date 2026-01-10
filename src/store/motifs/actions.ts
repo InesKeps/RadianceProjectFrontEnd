@@ -1,16 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
-import type { Antecedent, AntecedentDto, AntecedentDtoUpdate } from "../../types/historique";
 import type { ApiResponse } from "../../types/base";
+import type { Motif, MotifDto } from "@/types/data";
 
-export const getAllAntecedents = createAsyncThunk<ApiResponse<Antecedent[]>,void,{state: RootState}>(
-  "assurance/getAllAntecedents",
+export const getAllMotifs = createAsyncThunk<ApiResponse<Motif[]>,void,{state: RootState}>(
+  "motif/getAllMotifs",
   async (_,apiThunk) => {
     try {
       const token = apiThunk.getState().auth.userInfo?.token;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/antecedents`,
+        `${import.meta.env.VITE_API_URL}/motifs`,
         {
           method: "GET",
           headers: {
@@ -22,31 +22,31 @@ export const getAllAntecedents = createAsyncThunk<ApiResponse<Antecedent[]>,void
 
       if (!response.ok) {
         const error = await response.json();
-        console.log("Failed to get all antecedents: ", error);
-        return apiThunk.rejectWithValue("Failed to get all antecedents.");
+        console.log("Failed to get all motifs: ", error);
+        return apiThunk.rejectWithValue("Failed to get all motifs.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all antecedents: ", error);
+      console.log("Error on get all motifs: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
-          "Error on get all antecedents."
+          "Error on get all motifs."
       );
     }
   }
 );
 
-export const createAntecedent = createAsyncThunk<ApiResponse<Antecedent>, AntecedentDto,{state: RootState}>(
-  "assurance/createAntecedent",
+export const createMotif = createAsyncThunk<ApiResponse<Motif>, MotifDto,{state: RootState}>(
+  "motif/createMotif",
   async (data,apiThunk) => {
 
     try {
       const token = apiThunk.getState().auth.userInfo?.token;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/antecedents/create`,
+        `${import.meta.env.VITE_API_URL}/motifs/create`,
         {
           method: "POST",
           headers: {
@@ -60,31 +60,31 @@ export const createAntecedent = createAsyncThunk<ApiResponse<Antecedent>, Antece
 
       if (!response.ok) {
         const error = await response.json();
-        console.log("Failed to create antecedent: ", error);
-        return apiThunk.rejectWithValue("Failed to create antecedent.");
+        console.log("Failed to create motif: ", error);
+        return apiThunk.rejectWithValue("Failed to create motif.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create antecedent: ", error);
+      console.log("Error on create motif: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
-          "Error on create antecedent."
+          "Error on create motif."
       );
     }
   }
 );
 
-export const updateAntecedent = createAsyncThunk<ApiResponse<Antecedent>, AntecedentDtoUpdate,{state: RootState}>(
-  "assurance/updateAntecedent",
+export const updateMotif = createAsyncThunk<ApiResponse<Motif>, Motif,{state: RootState}>(
+  "motif/updateMotif",
   async (data,apiThunk) => {
 
     try {
       const token = apiThunk.getState().auth.userInfo?.token;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/antecedents/update/${data.id}`,
+        `${import.meta.env.VITE_API_URL}/motifs/update/${data.id}`,
         {
           method: "PUT",
           headers: {
@@ -98,30 +98,30 @@ export const updateAntecedent = createAsyncThunk<ApiResponse<Antecedent>, Antece
 
       if (!response.ok) {
         const error = await response.json();
-        console.log("Failed to update antecedent: ", error);
-        return apiThunk.rejectWithValue("Failed to update antecedent.");
+        console.log("Failed to update motif: ", error);
+        return apiThunk.rejectWithValue("Failed to update motif.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on update antecedent: ", error);
+      console.log("Error on update motif: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
-          "Error on update antecedent."
+          "Error on update motif."
       );
     }
   }
 );
 
-export const deleteAntecedent = createAsyncThunk<ApiResponse<Antecedent>, number,{state: RootState}>(
-  "user/deleteAntecedent",
+export const deleteMotif = createAsyncThunk<ApiResponse<Motif>, number,{state: RootState}>(
+  "motif/deleteMotif",
   async (id, apiThunk) => {
     try {
       const token = apiThunk.getState().auth.userInfo?.token;
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/antecedents/delete/${id}`,
+        `${import.meta.env.VITE_API_URL}/motifs/delete/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -134,19 +134,20 @@ export const deleteAntecedent = createAsyncThunk<ApiResponse<Antecedent>, number
 
       if (!response.ok) {
         const error = await response.json();
-        console.log("Failed to delete antecedent: ", error);
-        return apiThunk.rejectWithValue("Failed to delete antecedent.");
+        console.log("Failed to delete motif: ", error);
+        return apiThunk.rejectWithValue("Failed to delete motif.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on delete antecedent: ", error);
+      console.log("Error on delete motif: ", error);
       return apiThunk.rejectWithValue(
-        (error as { message: string }).message || "Error on delete antecedent."
+        (error as { message: string }).message || "Error on delete motif."
       );
     }
   }
 );
+
 
 

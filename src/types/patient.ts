@@ -60,10 +60,20 @@ export interface Allergie {
 
 export interface Consultation {
   id: number;
-  motif: string;
   dateHeure: string;
   patiendId: number;
   userId: number;
+}
+
+export interface ConsultationDto {
+  dateHeure: string;
+  patiendId: number;
+  userId: number;
+}
+
+export interface ConsultationDtoUpdate {
+  id: number;
+  dateHeure: string;
 }
 
 export interface PatientDetails extends Patient {
