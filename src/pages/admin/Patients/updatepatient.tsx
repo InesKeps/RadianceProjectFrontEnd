@@ -1,6 +1,6 @@
 import { Formik, Form, type FormikHelpers } from "formik";
 import * as yup from "yup";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaChevronCircleLeft } from "react-icons/fa";
 import Input from "../../../components/myComponents/input";
 import useAppDispatch from "../../../hooks/useAppDispatch";
@@ -11,24 +11,62 @@ import { updatePatient } from "@/store/patients/actions";
 import useAppSelector from "@/hooks/useAppSelector";
 import type { RootState } from "@/store/store";
 import type { Sexe } from "@/types/user";
+import { Card } from "@/components/ui/card";
+// import { useEffect, useState } from "react";
 
 const UpdatePatient = () => {
     const { id } = useParams();
+    // const patientId = Number(id);
     const navigate = useNavigate();
+    const location = useLocation();
+    const baseRoute = location.pathname.startsWith("/user") ? "/user" : "/admin";
     const dispatch = useAppDispatch();
     const patients = useAppSelector((state: RootState) => state.patient.items);
     const patientToUpdate = patients.find((patient) => patient.id === Number(id));
+    // const [formUpdate, setFormUpdate] = useState({
+    //     id: Number(id),
+    //     nom: "",
+    //     prenom:"",
+    //     adresse: "",
+    //     dateNaissance: "",
+    //     genre: "" as Sexe,
+    //     tel: "",
+    //     profession: "",
+    //     societe: "",
+    //     nationalite: "",
+    // });
+
+    // useEffect(() => {
+    //     if (patientId !== 0) {
+    //       const patientToUpdate = patients.find((patient) => patient.id === patientId);
+    //       if (patientToUpdate) setFormUpdate({
+    //         id: Number(id),
+    //         nom: patientToUpdate.nom,
+    //         prenom: patientToUpdate.prenom,
+    //         adresse: patientToUpdate.adresse,
+    //         dateNaissance: patientToUpdate.dateNaissance,
+    //         genre: patientToUpdate.genre,
+    //         tel: patientToUpdate.tel,
+    //         profession: patientToUpdate?.profession || "",
+    //         societe: patientToUpdate?.societe || "",
+    //         nationalite: patientToUpdate?.nationalite,
+    //       });
+    //     }
+    // }, [patientId]);
+
+    // const initialValues: PatientDtoUpdate = formUpdate;
     
-    const initialValues: PatientDtoUpdate = patientToUpdate || {
+    const initialValues: PatientDtoUpdate =  {
         id: Number(id),
-        nom: "",
-        prenom: "",
-        adresse: "",
-        dateNaissance: "",
-        genre: "" as Sexe,
-        tel: "",
-        profession: "",
-        nationalite: "",
+        nom: patientToUpdate?.nom || "",
+        prenom: patientToUpdate?.prenom || "",
+        adresse: patientToUpdate?.adresse || "",
+        dateNaissance: patientToUpdate?.dateNaissance || "",
+        genre: patientToUpdate?.genre || "" as Sexe,
+        tel: patientToUpdate?.tel || "",
+        profession: patientToUpdate?.profession || "",
+        societe: patientToUpdate?.societe || "",
+        nationalite: patientToUpdate?.nationalite || "",
     };
 
     const verifytel = /^\+?[1-9][0-9]{8,15}$/;
@@ -72,11 +110,18 @@ const UpdatePatient = () => {
     tel: yup
         .string()
         .matches(verifytel, "trop court min 8")
-        .matches(verifytel, "Le numéro de téléphone doit contenir entre 8 et 15 chiffres"),
+        .matches(verifytel, "Le numéro de téléphone doit contenir entre 8 et 15 chiffres")
+        .required("Entrez Le numéro de téléphone"),
 
     profession: yup
         .string()
-        .min(2, "trop court"),
+        .min(2, "trop court")
+        .optional(),
+
+    societe: yup
+        .string()
+        .min(2, "trop court")
+        .optional(),
 
     nationalite: yup
         .string()
@@ -89,12 +134,21 @@ const UpdatePatient = () => {
         formikHelpers: FormikHelpers<PatientDtoUpdate>
         ) => {
         formikHelpers.setSubmitting(true);
+
+        if (values.profession === "") {
+            values.profession = undefined;
+        }
+
+        if (values.societe === "") {
+            values.societe = undefined;
+        }
+        
         const response = await dispatch(updatePatient(values));
     
         if (response.meta.requestStatus === "fulfilled") {
             toast.success("Patient mis a jour avec succès.");
             formikHelpers.resetForm();
-            navigate(`/admin/detailspatient/${id}`);
+            navigate(`${baseRoute}/detailspatient/${id}`);
         }
     
         if (response.meta.requestStatus === "rejected") {
@@ -105,17 +159,17 @@ const UpdatePatient = () => {
     };
 
     return(
-        <section className="relative">
+        <section className="relative flex justify-center items-center py-12">
             <button 
                 type="button"
-                onClick={() => navigate(`/admin/detailspatient/${id}`)}
+                onClick={() => navigate(`${baseRoute}/detailspatient/${id}`)}
                 className="absolute top-4 left-4 text-[#0DABCB] text-2xl cursor-pointer">
                 <FaChevronCircleLeft/>
             </button>
-            <div>
+            <Card className="w-[70%] bg-[#f7f9fa]">
                 <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
                     {(formik) => (
-                    <Form autoComplete="off" className="flex flex-col items-center pt-12 justify-center w-full h-full">
+                    <Form autoComplete="off" className="flex flex-col items-center justify-center w-full h-full">
                         <div className="flex flex-col p-4 gap-3 w-[80%]">
                             <h2 className="font-semibold text-2xl text-center text-[#0caccc] mb-4">Modifier un patient</h2>
                             <div className="flex gap-8">
@@ -144,8 +198,6 @@ const UpdatePatient = () => {
                                         placeholder="Entrez la date de naissance"
                                         type="date"
                                     />
-                                </div>
-                                <div className="flex flex-col gap-4 w-1/2">
                                     <Select
                                         label="Sexe"
                                         name="genre"
@@ -154,6 +206,8 @@ const UpdatePatient = () => {
                                             { value: "F", label: "Féminin" },
                                         ]}
                                     />
+                                </div>
+                                <div className="flex flex-col gap-4 w-1/2">
                                     <Input
                                         label="Numéro de téléphone"
                                         name="tel"
@@ -162,9 +216,17 @@ const UpdatePatient = () => {
                                     /> 
                                     <Input
                                         label="Profession"
+                                        state="(Facultative)"
                                         name="profession"
                                         placeholder="Entrez la profession"
                                         type="text"
+                                    />
+                                    <Input 
+                                        label="Société" 
+                                        state="(Facultative)"
+                                        name="societe" 
+                                        type="text" 
+                                        placeholder="Entrez la société"
                                     />
                                     <Input
                                         label="Nationalité"
@@ -187,7 +249,7 @@ const UpdatePatient = () => {
                     </Form>
                     )}
                 </Formik>
-            </div>
+            </Card>
         </section>
     )
 }

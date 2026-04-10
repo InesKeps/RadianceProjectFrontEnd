@@ -1,22 +1,18 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
-import type { Antecedent, AntecedentDto, AntecedentDtoUpdate } from "../../types/historique";
+import type { Antecedent, AntecedentDto, AntecedentDtoUpdate } from "../../types/patientdata";
 import type { ApiResponse } from "../../types/base";
+import fetchWithAuth from "@/services/fetchwithauth.service";
 
 export const getAllAntecedents = createAsyncThunk<ApiResponse<Antecedent[]>,void,{state: RootState}>(
   "assurance/getAllAntecedents",
   async (_,apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
 
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/antecedents`,
         {
           method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
         }
       );
 
@@ -43,17 +39,11 @@ export const createAntecedent = createAsyncThunk<ApiResponse<Antecedent>, Antece
   async (data,apiThunk) => {
 
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/antecedents/create`,
         {
           method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
+          headers: {"Content-Type": "application/json",},
           body: JSON.stringify(data),
         }
       );
@@ -81,17 +71,11 @@ export const updateAntecedent = createAsyncThunk<ApiResponse<Antecedent>, Antece
   async (data,apiThunk) => {
 
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/antecedents/update/${data.id}`,
         {
           method: "PUT",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
+          headers: {"Content-Type": "application/json",},
           body: JSON.stringify(data),
         }
       );
@@ -118,17 +102,11 @@ export const deleteAntecedent = createAsyncThunk<ApiResponse<Antecedent>, number
   "user/deleteAntecedent",
   async (id, apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/antecedents/delete/${id}`,
         {
           method: "DELETE",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-        },
+          headers: {"Content-Type": "application/json",},
         }
       );
 

@@ -1,35 +1,39 @@
-import Utils from "../helpers/Utils";
-import { logoutAction, refreshAction } from "../store/auth/actions";
 
 const fetchWithAuth = async (
   input: RequestInfo,
   init?: RequestInit
 ): Promise<Response> => {
-  const { store } = await import("../store/store");
-  const state = store.getState();
-  let token = state.auth.userInfo?.token;
-
-  if (!token || Utils.isTokenExpired(token)) {
-    const result = await store.dispatch(refreshAction());
-
-    if (refreshAction.fulfilled.match(result)) {
-      const authInfo = result.payload.data;
-      token = authInfo.token;
-    } else {
-      store.dispatch(logoutAction());
-      window.location.href = "/login";
-      throw new Error("Token expired, user logged out");
-    }
-  }
-
-  return fetch(input, {
+  let response = await fetch(input, {
     ...init,
+    credentials: "include",
     headers: {
       accept: "application/json",
-      Authorization: `Bearer ${token}`,
       ...init?.headers,
     },
   });
+
+  if (response.status === 401) {
+    // Essayer de rafraîchir le token
+    const refreshRes = await fetch(`${import.meta.env.VITE_API_URL}/users/refresh`, {
+      method: "POST",
+      credentials: "include",
+      headers: { accept: "application/json" },
+    });
+
+    if (refreshRes.ok) {
+      // Relancer la requête initiale
+      response = await fetch(input, {
+        ...init,
+        credentials: "include",
+        headers: {
+          accept: "application/json",
+          ...init?.headers,
+        },
+      });
+    }
+  }
+
+  return response;
 };
 
 export default fetchWithAuth;

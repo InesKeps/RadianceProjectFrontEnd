@@ -1,9 +1,7 @@
-import { Navigate, Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router-dom";
 import AdminLayout from "./layouts/adminlayouts/AdminDashboardLayouts";
 import Dashboard from "./pages/admin/dashboard/dashboard";
 import PatientList from "./pages/admin/Patients/patientList";
-import Statistiques from "./pages/admin/Statistiques/statistiques";
-import PatientForm from "./pages/admin/Patients/addpatient";
 import Login from "./pages/auth/login";
 import ForbiddenPage from "./pages/forbidden";
 import Missing from "./pages/missing";
@@ -18,15 +16,17 @@ import AddPatient from "./pages/admin/Patients/addpatient";
 import UpdatePatient from "./pages/admin/Patients/updatepatient";
 import DetailsPatient from "./pages/admin/Patients/detailspatient";
 import Consultation from "./pages/admin/consultation/consultationlist";
-
-const getUserRole = () => {
-  const user = useAuth();
-  const role = user?.userInfo?.userToLogin?.role;
-  return role;
-};
+import AddConsultation from "./pages/admin/consultation/addconsultation";
+import Datas from "./pages/admin/donnees/donnees";
+import DetailsConsultation from "./pages/admin/consultation/detailsconsultation";
+import Facture from "./components/pdf/facture";
+import Devis from "./components/pdf/devis";
+import Ordonnance from "./components/pdf/ordonnance";
+import RendezVous from "./pages/admin/rdv/rdv";
 
 const App = () => {
-  const role = getUserRole();
+  const auth = useAuth();
+  const role = auth?.userInfo?.userToLogin?.role;
   return (
     <>
       <Routes>
@@ -36,7 +36,7 @@ const App = () => {
               ? role === "MEDECIN"
               ? <Navigate to="/admin/dashboard" />
               : role === "ASSISTANT"
-              ? <Navigate to="/admin/patients" />
+              ? <Navigate to="/user/patients" />
               : <Navigate to="/forbidden" />
             : <Navigate to="/login" />
           }
@@ -55,18 +55,34 @@ const App = () => {
             <Route path="updatepatient-form/:id" element={<UpdatePatient />} />
             <Route path="detailspatient/:id" element={<DetailsPatient />} />
             <Route path="consultation" element={<Consultation />} />
-            <Route path="statistiques" element={<Statistiques />} />
+            <Route path="consultation-form/:id" element={<AddConsultation />} />
+            <Route path="detailsconsultation/:id" element={<DetailsConsultation />} />
+            <Route path="rdv" element={<RendezVous />} />
             <Route path="personnel" element={<Personnel />} />
             <Route path="adduser-form" element={<AddUser />} />
             <Route path="updateuser-form/:id" element={<UpdateUser />} />
+            <Route path="donnees" element={<Datas />} />
+            <Route path="facture/:id" element={<Facture />} />
+            <Route path="devis/:id" element={<Devis />} />
+            <Route path="ordonnance/:id" element={<Ordonnance />} />
           </Route>
         </Route> 
 
         <Route element={<RequireAuth allowedRoles={['ASSISTANT']}/>}>
           <Route path="user" element={<UserLayout />}>
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="patients" element={<PatientList />} />
-            <Route path="patient-form" element={<PatientForm />} />
+            <Route path="addpatient-form" element={<AddPatient />} />
+            <Route path="updatepatient-form/:id" element={<UpdatePatient />} />
+            <Route path="detailspatient/:id" element={<DetailsPatient />} />
             <Route path="consultation" element={<Consultation />} />
+            <Route path="consultation-form/:id" element={<AddConsultation />} />
+            <Route path="detailsconsultation/:id" element={<DetailsConsultation />} />
+            <Route path="rdv" element={<RendezVous />} />
+            <Route path="donnees" element={<Datas />} />
+            <Route path="facture/:id" element={<Facture />} />
+            <Route path="devis/:id" element={<Devis />} />
+            <Route path="ordonnance/:id" element={<Ordonnance />} />
           </Route>
         </Route> 
 
@@ -92,3 +108,4 @@ const App = () => {
 }
 
 export default App;
+

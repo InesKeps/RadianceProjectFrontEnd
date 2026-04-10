@@ -1,6 +1,6 @@
 import { Formik, Form, FieldArray, Field } from "formik";
 import * as yup from "yup";
-import { useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router-dom"
 import { FaChevronCircleLeft } from "react-icons/fa";
 import Input from "@/components/myComponents/input";
 import Select from "@/components/select";
@@ -31,25 +31,32 @@ import { undefined } from "zod";
 
 type Step = "patient" | "antecedent" | "allergie" | "assurance" | "resume";
 
+const verifytel = /^\+?[1-9][0-9]{8,15}$/;
+
 export const assuranceSchema = yup.object().shape({
-        type: yup
-            .string()
-            .trim()
-            .min(2, "trop court")
-            .max(50, "Le type ne doit pas dépasser 50 caractères")
-            .required("Type requis"),
-        matricule: yup
-            .string()
-            .trim()
-            .min(2, "trop court")
-            .max(50, "Le matricule ne doit pas dépasser 50 caractères")
-            .required("Matricule requis"),
-        adresse: yup
-            .string()
-            .trim()
-            .min(2, "trop court")
-            .max(50, "L'adresse ne doit pas dépasser 50 caractères")
-            .required("Adresse requise"),
+    type: yup
+        .string()
+        .trim()
+        .min(2, "trop court")
+        .max(50, "Le type ne doit pas dépasser 50 caractères")
+        .required("Type requis"),
+    matricule: yup
+        .string()
+        .trim()
+        .min(2, "trop court")
+        .max(50, "Le matricule ne doit pas dépasser 50 caractères")
+        .required("Matricule requis"),
+    adresse: yup
+        .string()
+        .trim()
+        .min(2, "trop court")
+        .max(50, "L'adresse ne doit pas dépasser 50 caractères")
+        .required("Adresse requise"),
+    tel: yup
+        .string()
+        .matches(verifytel, "trop court min 8")
+        .matches(verifytel, "Le numéro de téléphone doit contenir entre 8 et 15 chiffres")
+        .required("Téléphone requis"),
 }).optional();
 
 export const antecedentSchema = yup.object().shape({
@@ -70,6 +77,8 @@ export const allergieSchema = yup.object().shape({
 
 const AddPatient = () =>{
     const navigate = useNavigate();
+    const location = useLocation();
+    const baseRoute = location.pathname.startsWith("/user") ? "/user" : "/admin";
     const dispatch = useAppDispatch();
     const user = useAuth();
     const id = user?.userInfo?.userToLogin?.id!;
@@ -84,6 +93,7 @@ const AddPatient = () =>{
             genre: "" as Sexe,
             tel: "",
             profession: "",
+            societe: "",
             nationalite: "",
             userId: id,
         },
@@ -93,6 +103,7 @@ const AddPatient = () =>{
             type: "",
             matricule: "",
             adresse: "",
+            tel:""
         },
     });
 
@@ -120,9 +131,8 @@ const AddPatient = () =>{
         type: patientData.assurance.type,
         matricule: patientData.assurance.matricule,
         adresse: patientData.assurance.adresse,
+        tel: patientData.assurance.tel,
     };
-
-    const verifytel = /^\+?[1-9][0-9]{8,15}$/;
 
     const patientSchema = yup.object().shape({
     nom: yup
@@ -163,9 +173,14 @@ const AddPatient = () =>{
     tel: yup
         .string()
         .matches(verifytel, "trop court min 8")
-        .matches(verifytel, "Le numéro de téléphone doit contenir entre 8 et 15 chiffres"),
+        .matches(verifytel, "Le numéro de téléphone doit contenir entre 8 et 15 chiffres")
+        .required("Entrez Le numéro de téléphone"),
 
     profession: yup
+        .string()
+        .min(2, "trop court"),
+
+    societe: yup
         .string()
         .min(2, "trop court"),
 
@@ -218,6 +233,14 @@ const AddPatient = () =>{
 
     const handleSubmitInfos = async ()=>{
 
+        if (patientData.details.profession === "") {
+            patientData.details.profession = undefined;
+        }
+
+        if (patientData.details.societe === "") {
+            patientData.details.societe = undefined;
+        }
+
         if (patientData.antecedents[0] === "") {
             patientData.antecedents = undefined;
         }
@@ -234,7 +257,7 @@ const AddPatient = () =>{
 
         if (response.meta.requestStatus === "fulfilled") {
             toast.success("Patient et détails créés avec succès.");
-            navigate("/admin/patients");
+            navigate(`${baseRoute}/patients`);
         }
         if (response.meta.requestStatus === "rejected") {
             toast.error("Echec de création du membre.");
@@ -251,24 +274,25 @@ const AddPatient = () =>{
                         <Form className="flex flex-col gap-4 w-full mx-auto">
                             <button 
                                 type="button"
-                                onClick={() => navigate("/admin/patients")}
+                                onClick={() => navigate(`${baseRoute}/patients`)}
                                 className="absolute top-4 left-4 text-[#0DABCB] text-2xl cursor-pointer">
                                 <FaChevronCircleLeft/>
                             </button>
                             <CardHeader className="font-medium text-center text-[#0caccc]">
                                 Enregistrer un patient
                             </CardHeader>
-                            <CardContent className="flex gap-4">
+                            <CardContent className="flex gap-16">
                                 <div className="flex flex-col gap-4 w-1/2">
                                     <Input label="Nom" name="nom" type="text" placeholder="Entrez le nom"/>
                                     <Input label="Prénom" name="prenom" type="text" placeholder="Entrez le prénom"/>
                                     <Input label="Adresse" name="adresse" type="text" placeholder="Entrez l'adresse"/>
                                     <Input label="Date de naissance" name="dateNaissance" type="date" placeholder="Entrez la date naissance"/>
+                                    <Select label="Sexe" name="genre" options={[{ value: "M", label: "Masculin" }, { value: "F", label: "Féminin" }]} />
                                 </div>
                                 <div className="flex flex-col gap-4 w-1/2">
-                                    <Select label="Sexe" name="genre" options={[{ value: "M", label: "Masculin" }, { value: "F", label: "Féminin" }]} />
                                     <Input label="Téléphone" name="tel" type="text" placeholder="Entrez le numéro de téléphone"/>
-                                    <Input label="Profession" name="profession" type="text" placeholder="Entrez la profession"/>
+                                    <Input label="Profession" state="(Facultative)" name="profession" type="text" placeholder="Entrez la profession"/>
+                                    <Input label="Société" state="(Facultative)" name="societe" type="text" placeholder="Entrez la société"/>
                                     <Input label="Nationalité" name="nationalite" type="text" placeholder="Entrez la nationalité"/>
                                 </div>
                             </CardContent>
@@ -289,7 +313,7 @@ const AddPatient = () =>{
                     <Form className="flex flex-col gap-6 w-[60%] mx-auto">
                         <button 
                             type="button"
-                            onClick={() =>  navigate("/admin/patients")}
+                                onClick={() =>  navigate(`${baseRoute}/patients`)}
                             className="absolute top-4 left-4 text-[#0DABCB] text-2xl cursor-pointer">
                             <FaChevronCircleLeft/>
                         </button>
@@ -301,7 +325,7 @@ const AddPatient = () =>{
                                 {formik.values.antecedents.map((_: any, index: any) => (
                                 <div className="flex gap-2" key={index}>
                                 <Field
-                                className="w-full outline-none py-1 px-3 shadow-sm bg-white rounded-full placeholder:text-xs"
+                                className="w-full outline-none py-1 pb-4 px-3 shadow-sm bg-white rounded-sm placeholder:text-xs"
                                 name={`antecedents[${index}]`}
                                 placeholder="Entrer l'antécédent"
                                 />
@@ -335,7 +359,7 @@ const AddPatient = () =>{
                     <Form className="flex flex-col gap-6 w-[60%] mx-auto">
                         <button 
                             type="button"
-                            onClick={()=>  navigate("/admin/patients")}
+                                onClick={()=>  navigate(`${baseRoute}/patients`)}
                             className="absolute top-4 left-4 text-[#0DABCB] text-2xl cursor-pointer">
                             <FaChevronCircleLeft/>
                         </button>
@@ -347,7 +371,7 @@ const AddPatient = () =>{
                                 {formik.values.allergies.map((_: any, index: any) => (
                                 <div className="flex gap-2" key={index}>
                                 <Field
-                                className="w-full outline-none py-1 px-3 shadow-sm bg-white rounded-full placeholder:text-xs"
+                                className="w-full outline-none py-1 pb-4 px-3 shadow-sm bg-white rounded-sm placeholder:text-xs"
                                 name={`allergies[${index}]`}
                                 placeholder="Entrer l'allergie"
                                 />
@@ -389,6 +413,7 @@ const AddPatient = () =>{
                             <Input label="Type" name="type" type="text" placeholder="Entrez le type d'assurance"/>
                             <Input label="Matricule" name="matricule" type="text" placeholder="Entrez le matricule d'assuré" />
                             <Input label="Adresse" name="adresse" type="text" placeholder="Entrez l'adresse"/>
+                            <Input label="Téléphone" name="tel" type="text" placeholder="Entrez le numéro de téléphone"/>
                             </CardContent>
                             <CardFooter className="flex flex-col gap-4 items-center justify-center py-4">
                             <div className="flex gap-4">
@@ -431,6 +456,7 @@ const AddPatient = () =>{
                                 <p><strong>Genre :</strong> {patientData.details.genre}</p>
                                 <p><strong>Téléphone :</strong> {patientData.details.tel}</p>
                                 <p><strong>Profession :</strong> {patientData.details.profession}</p>
+                                <p><strong>Société :</strong> {patientData.details.societe}</p>
                                 <p><strong>Nationalité :</strong> {patientData.details.nationalite}</p>
                             </div>
 
@@ -462,6 +488,7 @@ const AddPatient = () =>{
                                     <p><strong>Type :</strong> {patientData.assurance.type}</p>
                                     <p><strong>Matricule :</strong> {patientData.assurance.matricule}</p>
                                     <p><strong>Adresse :</strong> {patientData.assurance.adresse}</p>
+                                    <p><strong>Téléphone :</strong> {patientData.assurance.tel}</p>
                                 </div>
                             )}
                         </CardContent>

@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/table"
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -30,7 +29,6 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useNavigate } from "react-router"
 import {
   ChevronLeft,
   ChevronRight,
@@ -74,8 +72,6 @@ export function DataTable<TData, TValue>({
     },
   })
 
-  const Navigate = useNavigate();
-
   return (
     <div>
       <Card className="bg-[#f7f9fa]">
@@ -83,22 +79,14 @@ export function DataTable<TData, TValue>({
             <CardTitle>Consultations</CardTitle>
             <CardDescription>
               <Input
-                placeholder="Rechercher une consultation..."
-                value={(table.getColumn("nom")?.getFilterValue() as string) ?? ""}
+                placeholder="Rechercher une consultation...(entrez la date)"
+                value={(table.getColumn("dateHeure")?.getFilterValue() as string) ?? ""}
                 onChange={(event) =>
-                table.getColumn("nom")?.setFilterValue(event.target.value)
+                table.getColumn("dateHeure")?.setFilterValue(event.target.value)
                 }
                 className="max-w-sm bg-white"
               />
             </CardDescription>
-            <CardAction>
-              <button 
-                type="button"
-                onClick={() => Navigate("/admin/adduser-form")}
-                className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-md">
-                Ajouter une consultation
-              </button>
-            </CardAction>
           </CardHeader>
           <CardContent>
             <div className="overflow-hidden bg-white rounded-md border">
@@ -138,7 +126,7 @@ export function DataTable<TData, TValue>({
                         ) : (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                            No results.
+                            Aucune consultation enregistrée.
                             </TableCell>
                         </TableRow>
                         )}
@@ -147,8 +135,8 @@ export function DataTable<TData, TValue>({
             </div>
           </CardContent>
           <CardFooter>
-            <div className="flex items-center justify-between px-2">
-                <div className="flex gap-2 text-sm">
+            <div className="flex items-center justify-between w-full px-2">
+              <div className="flex gap-2 text-sm">
                 <p className="font-medium">Nombre total de Consultations:</p>
                 <b>{data.length}</b>
               </div>

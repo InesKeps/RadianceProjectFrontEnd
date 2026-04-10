@@ -2,10 +2,9 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 
 export function NavMain({
   Links,
@@ -16,18 +15,21 @@ export function NavMain({
     icon?: React.ReactNode
   }[]
 }) {
+
+  const linkStyle = ({ isActive }: { isActive: boolean }) =>
+  `flex items-center gap-2 px-4 py-2 rounded-md font-medium
+    ${isActive ? "bg-[#0DABCB] text-white" : " hover:text-[#fff] hover:bg-[#0DABCB]"}`;
   return (
     <SidebarGroup>
       <SidebarGroupContent>
-        <SidebarMenu className="flex flex-col gap-3">
+        <SidebarMenu className="flex flex-col gap-2 pt-2">
           {Links.map((link) => (
-            <NavLink to={link.url}>
-              <SidebarMenuItem key={link.title}>
-                <SidebarMenuButton tooltip={link.title}  className="px-4">
+            <NavLink to={link.url} className={linkStyle}>
+              <SidebarMenuItem className="flex gap-4 items-center" key={link.title}>
                     {link.icon}
                     {link.title}
-                </SidebarMenuButton>
-            </SidebarMenuItem>
+                {/* </SidebarMenuButton> */}
+              </SidebarMenuItem>
             </NavLink>
           ))}
         </SidebarMenu>
@@ -35,3 +37,4 @@ export function NavMain({
     </SidebarGroup>
   )
 }
+

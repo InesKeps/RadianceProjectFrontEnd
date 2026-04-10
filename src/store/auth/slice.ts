@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { AuthInfo } from "../../types/user";
 import type { ApiError, statusType } from "../../types/base";
-import { loginAction, refreshAction } from "./actions";
+import { loginAction, refreshAction, logoutAction } from "./actions";
 import Utils from "../../helpers/Utils";
 
 export interface AuthState {
@@ -9,10 +9,12 @@ export interface AuthState {
   status: {
     login: statusType;
     refresh: statusType;
+    logout: statusType;
   };
   error: {
     login: ApiError;
     refresh: ApiError;
+    logout: ApiError;
   };
 }
 
@@ -23,24 +25,19 @@ const initialState: AuthState = {
   status: {
     login: "idle",
     refresh: "idle",
+    logout: "idle",
   },
   error: {
     login: { message: null },
     refresh: { message: null },
+    logout: { message: null },
   },
 };
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    logout: (state) => {
-      Utils.clearAuthInfo();
-      state.userInfo = null;
-      state.status.login = "idle";
-      state.error.login = { message: null };
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(loginAction.pending, (state) => {
@@ -50,11 +47,9 @@ export const authSlice = createSlice({
       .addCase(loginAction.fulfilled, (state, action) => {
         state.status.login = "succeeded";
         if (action.payload) {
-          const { userToLogin, token, refreshToken } = action.payload.data;
+          const { userToLogin } = action.payload.data;
           state.userInfo = {
             userToLogin: userToLogin,
-            token: token,
-            refreshToken: refreshToken,
           };
         }
       })
@@ -72,14 +67,29 @@ export const authSlice = createSlice({
       .addCase(refreshAction.fulfilled, (state, action) => {
         state.status.refresh = "succeeded";
         if (action.payload) {
-          const { userToLogin, token, refreshToken } = action.payload.data;
-          state.userInfo = { userToLogin, token, refreshToken };
-          Utils.setAuthInfo(state.userInfo);
+          const { userToLogin } = action.payload.data;
+          state.userInfo = { userToLogin };
         }
       })
       .addCase(refreshAction.rejected, (state) => {
         state.status.refresh = "failed";
         state.error.refresh = { message: "refresh failed!" };
+        state.userInfo = null;
+      })
+
+      .addCase(logoutAction.pending, (state) => {
+        state.status.logout = "pending";
+        state.error.logout = { message: null };
+      })
+      .addCase(logoutAction.fulfilled, (state) => {
+        state.status.logout = "succeeded";
+        state.userInfo = null;
+      })
+      .addCase(logoutAction.rejected, (state, action) => {
+        state.status.logout = "failed";
+        if (action.payload) {
+          state.error.logout = { message: "logout failed!" };
+        }
         state.userInfo = null;
       });
   },

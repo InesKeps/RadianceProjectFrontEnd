@@ -1,22 +1,18 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
 import type { ApiResponse } from "../../types/base";
-import type { Motif, MotifDto } from "@/types/data";
+import type { Motif, MotifDto } from "@/types/consultationdatas";
+import fetchWithAuth from "@/services/fetchwithauth.service";
 
 export const getAllMotifs = createAsyncThunk<ApiResponse<Motif[]>,void,{state: RootState}>(
   "motif/getAllMotifs",
   async (_,apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
 
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/motifs`,
         {
           method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
         }
       );
 
@@ -43,17 +39,12 @@ export const createMotif = createAsyncThunk<ApiResponse<Motif>, MotifDto,{state:
   async (data,apiThunk) => {
 
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/motifs/create`,
+      console.log("error?");
+      
+      const response = await fetchWithAuth( `${import.meta.env.VITE_API_URL}/motifs/create`,
         {
           method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
+          headers: {"Content-Type": "application/json",},
           body: JSON.stringify(data),
         }
       );
@@ -81,17 +72,11 @@ export const updateMotif = createAsyncThunk<ApiResponse<Motif>, Motif,{state: Ro
   async (data,apiThunk) => {
 
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/motifs/update/${data.id}`,
+      const response = await fetchWithAuth( `${import.meta.env.VITE_API_URL}/motifs/update/${data.id}`,
         {
           method: "PUT",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
+          headers: {"Content-Type": "application/json",},
           body: JSON.stringify(data),
         }
       );
@@ -118,17 +103,12 @@ export const deleteMotif = createAsyncThunk<ApiResponse<Motif>, number,{state: R
   "motif/deleteMotif",
   async (id, apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
 
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/motifs/delete/${id}`,
         {
           method: "DELETE",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-        },
+          headers: {"Content-Type": "application/json",},
         }
       );
 

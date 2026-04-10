@@ -6,7 +6,7 @@ import {
   deleteAssurance,
 } from "./actions";
 import type { ApiError, statusType } from "../../types/base";
-import type { Assurance } from "../../types/historique";
+import type { Assurance } from "../../types/patientdata";
 
 export interface AssuranceState {
   items: Assurance[];

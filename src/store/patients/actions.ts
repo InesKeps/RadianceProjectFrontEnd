@@ -2,22 +2,17 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
 import type { Patient, PatientDetails, PatientDto, PatientDtoUpdate } from "../../types/patient";
 import type { ApiResponse } from "../../types/base";
-import type { PatientDetailsDto } from "@/types/historique";
+import type { PatientDetailsDto } from "@/types/patientdata";
+import fetchWithAuth from "@/services/fetchwithauth.service";
 
 export const getAllPatients = createAsyncThunk<ApiResponse<Patient[]>,void,{state: RootState}>(
   "user/getAllPatients",
   async (_,apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/patients`,
         {
           method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
         }
       );
 
@@ -43,14 +38,8 @@ export const getPatientDetails = createAsyncThunk<ApiResponse<PatientDetails>,nu
   "patient/getPatientDetails",
   async (id, apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/patients/details/${id}`, {
+      const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/patients/details/${id}`, {
         method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization: token ? `Bearer ${token}` : "",
-        },
       });
 
       if (!response.ok) {
@@ -74,17 +63,11 @@ export const createPatient = createAsyncThunk<ApiResponse<Patient>, PatientDto,{
   async (data,apiThunk) => {
 
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/patients/create`,
         {
           method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
+          headers: {"Content-Type": "application/json",},
           body: JSON.stringify(data),
         }
       );
@@ -111,20 +94,13 @@ export const createPatientwithdetails = createAsyncThunk<ApiResponse<PatientDeta
   "patient/createPatientwithdetails",
   async (data, apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
       console.log(data);
       
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/patients/createdetails`,
         {
           method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
+          headers: {"Content-Type": "application/json",},
           body: JSON.stringify(data),
         }
       );
@@ -152,17 +128,11 @@ export const updatePatient = createAsyncThunk<ApiResponse<Patient>,PatientDtoUpd
   async (data, apiThunk) => {
     
   try {
-    const token = apiThunk.getState().auth.userInfo?.token;
-
-    const response = await fetch(
+    const response = await fetchWithAuth(
       `${import.meta.env.VITE_API_URL}/patients/update/${data.id}`,
       {
         method: "PUT",
-        headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-        },
+        headers: {"Content-Type": "application/json",},
         body: JSON.stringify(data),
       }
     );
@@ -188,17 +158,11 @@ export const deletePatient = createAsyncThunk<ApiResponse<Patient>, number,{stat
   "user/deletePatient",
   async (id, apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/patients/delete/${id}`,
         {
           method: "DELETE",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-        },
+          headers: {"Content-Type": "application/json",},
         }
       );
 

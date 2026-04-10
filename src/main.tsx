@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { AuthProvider } from './context/AuthProvider.tsx'
@@ -20,3 +20,4 @@ createRoot(document.getElementById('root')!).render(
       </Provider>
   </StrictMode>,
 )
+

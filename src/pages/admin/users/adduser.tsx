@@ -1,6 +1,6 @@
 import { Formik, Form, type FormikHelpers } from "formik";
 import * as yup from "yup";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import Input from "../../../components/myComponents/input";
 import Password from "../../../components/myComponents/password";
 import type { Role, Sexe, UserDto } from "../../../types/user";
@@ -109,9 +109,9 @@ const AddUser =()=>{
                         <div className="flex flex-col p-4 gap-3">
                             <CardContent>
                                 <Input
-                                    label="Nom"
+                                    label="Nom et prénom"
                                     name="nom"
-                                    placeholder="Entrez le nom"
+                                    placeholder="Entrez le nom et le prénom"
                                     type="text"
                                 />
                                 <Input
@@ -138,7 +138,6 @@ const AddUser =()=>{
                                     label="Rôle"
                                     name="role"
                                     options={[
-                                        { value: "MEDECIN", label: "Médecin" },
                                         { value: "ASSISTANT", label: "Assistant" },
                                     ]}
                                     />

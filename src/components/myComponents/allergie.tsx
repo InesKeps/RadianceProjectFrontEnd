@@ -28,27 +28,42 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { toast } from "sonner";
 import useAppDispatch from "@/hooks/useAppDispatch";
 import { allergieSchema, antecedentSchema } from "@/pages/admin/Patients/addpatient";
 import Input from "@/components/myComponents/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import type { AllergieDtoUpdate } from "@/types/historique";
+import type { AllergieDtoUpdate } from "@/types/patientdata";
 import { createAllergie, deleteAllergie, updateAllergie } from "@/store/allergies/actions";
+import { getPatientDetails } from "@/store/patients/actions";
+import { toast } from "react-toastify";
+
+// Composant pour afficher et gérer les Allergies du patient sur la page DetailsPatient
 
 const Allergie = () => {
     const dispatch = useAppDispatch();
+    //recuperation du patient selectionne dont on veut traiter les details
     const patientDetails = useAppSelector((state: RootState) => state.patient.selectedPatient);
-        const [open, setOpen] = useState(false);
-        const [active, setActive] = useState<"first" | "second" | null>(null);
-        const [allId, setAllId] = useState(0);
-        const [formUpdateAll, setFormUpdateAll] = useState({id: 0, nomAllergie: ""});
 
+    //states pour controller l'etat des boites de dialogues
+    const [open, setOpen] = useState(false);
+    const [active, setActive] = useState<"first" | "second" | null>(null);
+
+    //state pour conserver l'id de l'allergie selectionnée pour la modification
+    const [allId, setAllId] = useState(0);
+
+    //state pour conserver l'id de l'allergie selectionnée pour la suppression
+    const [selectedIdDel, setSelectedIdDel] = useState<number | null>(null);
+
+    //state pour recuperer les donnees de l'allergie a modifier et preremplir le formulaire
+    const [formUpdateAll, setFormUpdateAll] = useState({id: 0, nomAllergie: ""});
+
+    //valeurs initiales du formulaire pour ajouter une allergie
     const allergieInitialValues = {
         allergies: [""],
     };
 
+    //update instantanement les donnees pour preremplir le formulaire de modification quand l'id change
     useEffect(() => {
         if (allId !== 0) {
         const all = patientDetails?.allergie.find(a => a.id === allId);
@@ -59,19 +74,15 @@ const Allergie = () => {
         }
     }, [allId]);
 
+    //valeurs initiales du formulaire pour modifier une allergie
     const allergieToUpdateInitialValues: AllergieDtoUpdate = formUpdateAll!;
 
-    const OpenFormUpdate = () =>{
-        setActive("second");
-        setOpen(true);
-    };
-
+    //fonction d'enregistrement d'une ou plusieurs allergie(s) en BD
     const handleSubmitAllergie = async (
         values: {allergies: string[]},
         formikHelpers: FormikHelpers<{allergies: string[]}>
         ) => {
         formikHelpers.setSubmitting(true);
-
         const value = {
             nomAllergie: "",
             patientId: Number(patientDetails?.id)
@@ -83,20 +94,19 @@ const Allergie = () => {
 
             if (response.meta.requestStatus === "fulfilled") {
                 toast.success("Allergie ajoutée avec succès.");
+                dispatch(getPatientDetails(Number(patientDetails?.id)));
                 formikHelpers.resetForm();
-                
-                window.location.reload();
             }
     
             if (response.meta.requestStatus === "rejected") {
                 toast.error("Echec d'ajout de l'allergie.");
             }
-    
         }
         
         formikHelpers.setSubmitting(false);
     };
 
+    //fonction de modification d'une allergie en BD
     const handleUpdateAllergie = async (values: AllergieDtoUpdate,formikHelpers: FormikHelpers<AllergieDtoUpdate>)=>{
         
         formikHelpers.setSubmitting(true);
@@ -104,8 +114,8 @@ const Allergie = () => {
     
         if (response.meta.requestStatus === "fulfilled") {
         toast.success("Allergie modifiée avec succès.");
+        dispatch(getPatientDetails(Number(patientDetails?.id)));
         console.log("success");
-        window.location.reload();
         }
     
         if (response.meta.requestStatus === "rejected") {
@@ -113,18 +123,13 @@ const Allergie = () => {
         }
     };
 
-    const [selectedIdDel, setSelectedIdDel] = useState<number | null>(null);
-
-    const handleIdToDelete = (id: number) => {
-        setSelectedIdDel(id);
-    };
-
+    //fonction de suppression d'une allergie en BD
     const handleDeleteAllergie = async (id:number)=>{
         const response = await dispatch(deleteAllergie(id));
 
         if (response.meta.requestStatus === "fulfilled") {
         toast.success("Allergie supprimée avec succès.");
-        window.location.reload();
+        dispatch(getPatientDetails(Number(patientDetails?.id)));
         }
 
         if (response.meta.requestStatus === "rejected") {
@@ -139,27 +144,37 @@ const Allergie = () => {
                 <Card className="bg-[#f7f9fa] p-4">
                     <CardAction className="flex absolute right-4 top-4 gap-2">
                         <DialogTrigger asChild>
-                        <button onClick={() => { setActive("first"); setOpen(true); }} className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-sm rounded-sm hover:bg-[#07c6ec] cursor-pointer">Ajouter</button>
+                            {/* bouton pour ouvrir le dialog contenant le form d'ajout d'une allergie */}
+                            <button onClick={() => { setActive("first"); setOpen(true); }} className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-sm rounded-sm hover:bg-[#07c6ec] cursor-pointer">
+                                Ajouter
+                            </button>
                         </DialogTrigger>
                     </CardAction>
-                    <CardTitle className="flex justify-between px-2">Allergies: <b className="text-black">{patientDetails?.allergie.length}</b></CardTitle>
+                    <CardTitle className="flex gap-2 items-center px-2">Allergies: { patientDetails?.allergie? <p className="text-black">{patientDetails.allergie.length}</p> : 0 }</CardTitle>
+                    {/* Affichage des allergies enregistrees en BD */}
                     <CardContent>
                     {patientDetails?.allergie?.length ? (
                     patientDetails.allergie.map((all) => (
-                        <div className="flex justify-between border-b py-2">
-                            <p key={all.id}>{all.nomAllergie}</p>
+                        <div className="flex items-center justify-between border-b py-2">
+                            <p className="text-sm" key={all.id}>{all.nomAllergie}</p>
                             <div className="flex gap-2">
-                                <button onClick={() => {setAllId(all.id); OpenFormUpdate();}} className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-[#07c6ec] cursor-pointer">Modifier</button>
-                                <AlertDialogTrigger onClick={()=>handleIdToDelete(Number(all.id))} className="bg-red-500 text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-red-600 cursor-pointer">Supprimer</AlertDialogTrigger>
+                                {/* bouton pour ouvrir le dialog contenant le form de modification d'une allergie */}
+                                <button onClick={() => {setAllId(all.id); setActive("second"); setOpen(true);}} className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-[#07c6ec] cursor-pointer">
+                                    Modifier
+                                </button>
+                                {/* bouton pour supprimer une allergie */}
+                                <AlertDialogTrigger onClick={()=>(setSelectedIdDel(all.id))} className="bg-red-500 text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-red-600 cursor-pointer">
+                                    Supprimer
+                                </AlertDialogTrigger>
                             </div>
                         </div>
                     ))
                     ) : (
-                    <p className="text-gray-500">Aucune allergie</p>
+                    <p className="text-gray-500 text-sm">Aucune allergie</p>
                     )}
                     </CardContent>
                 </Card>
-                <form>
+                {/* Dialog + form pour ajouter une allergie */}
                 {active === "first" && (
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader className="font-medium text-[#0caccc]">
@@ -188,15 +203,21 @@ const Allergie = () => {
                                     </FieldArray>
                                 </CardContent>
                                 <CardFooter className="flex gap-4 items-center justify-center py-4">
-                                    <button type="submit" disabled={formik.isSubmitting} className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-full w-full">
-                                        Enregistrer
-                                    </button>
+                                    <DialogClose asChild className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-full w-1/2">
+                                        <Button variant="outline">Annuler</Button>
+                                    </DialogClose>
+                                    <DialogClose asChild className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-full w-1/2">
+                                        <Button type="submit" disabled={formik.isSubmitting}>
+                                            Enregistrer
+                                        </Button>
+                                    </DialogClose>
                                 </CardFooter>
                             </Form>
                             )}
                         </Formik>
                     </DialogContent>
                 )}
+                {/* Dialog + form pour modifier une allergie */}
                 {active === "second" && (
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader className="font-medium text-[#0caccc]">
@@ -221,8 +242,8 @@ const Allergie = () => {
                         </Formik>
                     </DialogContent>
                 )}
-                </form>
             </Dialog>
+            {/* Alerte pour confirmer la suppression d'une allergie */}
             <AlertDialogContent>
             <AlertDialogHeader>
                 <AlertDialogTitle>Attention</AlertDialogTitle>

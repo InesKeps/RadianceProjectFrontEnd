@@ -6,7 +6,7 @@ import {
   deleteAllergie,
 } from "./actions";
 import type { ApiError, statusType } from "../../types/base";
-import type { Allergie } from "../../types/historique";
+import type { Allergie } from "../../types/patientdata";
 
 export interface AllergieState {
   items: Allergie[];

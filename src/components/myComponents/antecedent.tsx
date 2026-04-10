@@ -27,27 +27,42 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { toast } from "sonner";
 import useAppDispatch from "@/hooks/useAppDispatch";
 import { antecedentSchema } from "@/pages/admin/Patients/addpatient";
 import Input from "@/components/myComponents/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import type { AntecedentDtoUpdate } from "@/types/historique";
+import type { AntecedentDtoUpdate } from "@/types/patientdata";
 import { createAntecedent, deleteAntecedent, updateAntecedent } from "@/store/antecedents/actions";
+import { getPatientDetails } from "@/store/patients/actions";
+import { toast } from "react-toastify";
+
+// Composant pour afficher et gérer les antécédents du patient sur la page DetailsPatient
 
 const Antecedent = () => {
     const dispatch = useAppDispatch();
+     //recuperation du patient selectionne dont on veut traiter les details
     const patientDetails = useAppSelector((state: RootState) => state.patient.selectedPatient);
-        const [open, setOpen] = useState(false);
-        const [active, setActive] = useState<"first" | "second" | null>(null);
-        const [antId, setAntId] = useState(0);
-        const [formUpdateAnt, setFormUpdateAnt] = useState({id: 0, nomAntecedent: ""});
 
+    //states pour controller l'etat des boites de dialogues
+    const [open, setOpen] = useState(false);
+    const [active, setActive] = useState<"first" | "second" | null>(null);
+
+    //state pour conserver l'id de l'antecedent selectionné pour la modification
+    const [antId, setAntId] = useState(0);
+
+    //state pour conserver l'id de l'antecedent selectionné pour la suppression
+    const [selectedIdDel, setSelectedIdDel] = useState<number | null>(null);
+
+    //state pour recuperer les donnees de l'antecedent a modifier et preremplir le formulaire
+    const [formUpdateAnt, setFormUpdateAnt] = useState({id: 0, nomAntecedent: ""});
+
+    //valeurs initiales du formulaire pour ajouter un antecedent
     const antecedentInitialValues = {
         antecedents: [""],
     };
 
+    //update instantanement les donnees pour preremplir le formulaire de modification quand l'id change
     useEffect(() => {
         if (antId !== 0) {
         const ant = patientDetails?.antecedent.find(a => a.id === antId);
@@ -58,16 +73,10 @@ const Antecedent = () => {
         }
     }, [antId]);
 
+    //valeurs initiales du formulaire pour modifier un antecedent
     const antecedentToUpdateInitialValues: AntecedentDtoUpdate = formUpdateAnt!;
 
-    const OpenFormUpdate = () =>{
-        console.log(antId);
-        setActive("second");
-        setOpen(true);
-        console.log(antecedentToUpdateInitialValues);
-        
-    };
-
+    //fonction d'enregistrement d'un ou plusieurs antecedent(s) en BD
     const handleSubmitAntecedent = async (
         values: {antecedents: string[]},
         formikHelpers: FormikHelpers<{antecedents: string[]}>
@@ -84,14 +93,13 @@ const Antecedent = () => {
             const response = await dispatch(createAntecedent(value));
 
             if (response.meta.requestStatus === "fulfilled") {
-                toast.success("Antecedent ajoutée avec succès.");
+                toast.success("Antécédent ajouté avec succès.");
+                dispatch(getPatientDetails(Number(patientDetails?.id)));
                 formikHelpers.resetForm();
-                
-                window.location.reload();
             }
     
             if (response.meta.requestStatus === "rejected") {
-                toast.error("Echec d'ajout de l'Antecedent.");
+                toast.error("Echec d'ajout de l'antécédent.");
             }
     
         }
@@ -99,6 +107,7 @@ const Antecedent = () => {
         formikHelpers.setSubmitting(false);
     };
 
+    //fonction de modification d'un antecedent en BD
     const handleUpdateAntecedent = async (values: AntecedentDtoUpdate,formikHelpers: FormikHelpers<AntecedentDtoUpdate>)=>{
         console.log(formUpdateAnt);
         
@@ -109,8 +118,7 @@ const Antecedent = () => {
     
         if (response.meta.requestStatus === "fulfilled") {
         toast.success("Antecedent modifiée avec succès.");
-        console.log("success");
-        window.location.reload();
+        dispatch(getPatientDetails(Number(patientDetails?.id)));
         }
     
         if (response.meta.requestStatus === "rejected") {
@@ -118,18 +126,13 @@ const Antecedent = () => {
         }
     };
 
-    const [selectedIdDel, setSelectedIdDel] = useState<number | null>(null);
-
-    const handleIdToDelete = (id: number) => {
-        setSelectedIdDel(id);
-    };
-
+    //fonction de suppression d'un antecedent en BD
     const handleDeleteAntecedent = async (id:number)=>{
         const response = await dispatch(deleteAntecedent(id));
 
         if (response.meta.requestStatus === "fulfilled") {
         toast.success("Assurance supprimée avec succès.");
-        window.location.reload();
+        dispatch(getPatientDetails(Number(patientDetails?.id)));
         }
 
         if (response.meta.requestStatus === "rejected") {
@@ -144,27 +147,37 @@ const Antecedent = () => {
                 <Card className="bg-[#f7f9fa] p-4 ">
                     <CardAction className="flex absolute right-4 top-4 gap-2">
                         <DialogTrigger asChild>
-                        <button onClick={() => { setActive("first"); setOpen(true); }} className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-sm rounded-sm hover:bg-[#07c6ec] cursor-pointer">Ajouter</button>
+                            {/* bouton pour ouvrir le dialog contenant le form d'ajout d'un antecedent */}
+                            <button onClick={() => { setActive("first"); setOpen(true); }} className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-sm rounded-sm hover:bg-[#07c6ec] cursor-pointer">
+                                Ajouter
+                            </button>
                         </DialogTrigger>
                     </CardAction>
-                    <CardTitle className="flex items-center justify-between px-2">Antécédents: <b className="text-black">{patientDetails?.antecedent.length}</b></CardTitle>
+                    <CardTitle className="flex gap-2 items-center px-2">Antécédents: { patientDetails?.antecedent? <p className="text-black">{patientDetails.antecedent.length}</p> : 0 }</CardTitle>
+                    {/* Affichage des allergies enregistrees en BD */}
                     <CardContent>
                         {patientDetails?.antecedent?.length ? (
                         patientDetails.antecedent.map((ant) => (
-                            <div className="flex justify-between border-b py-2">
-                                <p key={ant.id}>{ant.nomAntecedent}</p>
+                            <div className="flex items-center justify-between border-b py-2">
+                                <p className="text-sm" key={ant.id}>{ant.nomAntecedent}</p>
                                 <div className="flex gap-2">
-                                    <button onClick={() => {setAntId(ant.id); OpenFormUpdate();}} className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-[#07c6ec] cursor-pointer">Modifier</button>
-                                    <AlertDialogTrigger onClick={()=>handleIdToDelete(Number(ant.id))} className="bg-red-500 text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-red-600 cursor-pointer">Supprimer</AlertDialogTrigger>
+                                    {/* bouton pour ouvrir le dialog contenant le form de modification d'un antecedent */}
+                                    <button onClick={() => {setAntId(ant.id); setActive("second"); setOpen(true);}} className="bg-[#0DABCB] text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-[#07c6ec] cursor-pointer">
+                                        Modifier
+                                    </button>
+                                    {/* bouton pour supprimer un antecedent */}
+                                    <AlertDialogTrigger onClick={()=>(setSelectedIdDel(ant.id))} className="bg-red-500 text-white font-medium px-2 py-1 text-xs rounded-sm hover:bg-red-600 cursor-pointer">
+                                        Supprimer
+                                    </AlertDialogTrigger>
                                 </div>
                             </div>
                         ))
                         ) : (
-                        <p className="text-gray-500">Aucun antécédent</p>
+                        <p className="text-gray-500 text-sm">Aucun antécédent</p>
                         )}
-                        </CardContent>
-                    </Card>
-                <form>
+                    </CardContent>
+                </Card>
+                {/* Dialog + form pour ajouter un antecedent */}
                 {active === "first" && (
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader className="font-medium text-[#0caccc]">
@@ -194,15 +207,18 @@ const Antecedent = () => {
                                     <DialogClose asChild className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-full w-1/2">
                                         <Button variant="outline">Annuler</Button>
                                     </DialogClose>
-                                    <button type="submit" disabled={formik.isSubmitting} className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-full w-full">
-                                        Enregistrer
-                                    </button>
+                                    <DialogClose asChild className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-full w-1/2">
+                                        <Button type="submit" disabled={formik.isSubmitting}>
+                                            Enregistrer
+                                        </Button>
+                                    </DialogClose>
                                 </DialogFooter>
                             </Form>
                             )}
                         </Formik>
                     </DialogContent>
                 )}
+                {/* Dialog + form pour modifier un antecedent */}
                 {active === "second" && (
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader className="font-medium text-[#0caccc]">
@@ -227,8 +243,8 @@ const Antecedent = () => {
                         </Formik>
                     </DialogContent>
                 )}
-                </form>
             </Dialog>
+            {/* Alerte pour confirmer la suppression d'un antecedent */}
             <AlertDialogContent>
             <AlertDialogHeader>
                 <AlertDialogTitle>Attention</AlertDialogTitle>
