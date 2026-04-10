@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   getAllConsultations,
+  getDetailsConsultation,
+  getPatientConsultations,
   createConsultation,
   updateConsultation,
   deleteConsultation,
@@ -10,14 +12,20 @@ import type { Consultation } from "@/types/patient";
 
 export interface ConsultationState {
   items: Consultation[];
+  PatientConsultations: Consultation[] | null;
+  ConsultationDetails: Consultation | null;
   status: {
     getAll: statusType;
+    getDetails: statusType;
+    getPatient: statusType;
     create: statusType;
     update: statusType;
     delete: statusType;
   };
   error: {
     getAll: ApiError;
+    getDetails: ApiError;
+    getPatient: ApiError;
     create: ApiError;
     update: ApiError;
     delete: ApiError;
@@ -26,14 +34,20 @@ export interface ConsultationState {
 
 const initialState: ConsultationState = {
   items: [],
+  PatientConsultations: [],
+  ConsultationDetails: null,
   status: {
     getAll: "idle",
+    getDetails: "idle",
+    getPatient: "idle",
     create: "idle",
     update: "idle",
     delete: "idle",
   },
   error: {
     getAll: { message: null },
+    getDetails: { message: null },
+    getPatient: { message: null },
     create: { message: null },
     update: { message: null },
     delete: { message: null },
@@ -64,63 +78,99 @@ export const consultationSlice = createSlice({
       });
 
     builder
-      .addCase(createConsultation.pending, (state) => {
-        state.status.create = "pending";
-        state.error.create = { message: null };
+      .addCase(getDetailsConsultation.pending, (state) => {
+        state.status.getDetails = "pending";
+        state.error.getDetails = { message: null };
       })
-      .addCase(createConsultation.fulfilled, (state, action) => {
-        state.status.create = "succeeded";
+      .addCase(getDetailsConsultation.fulfilled, (state, action) => {
+        state.status.getDetails = "succeeded";
         if (action.payload) {
-          state.items.unshift(action.payload.data);
+          state.ConsultationDetails = action.payload.data;
         }
       })
-      .addCase(createConsultation.rejected, (state, action) => {
-        state.status.create = "failed";
+      .addCase(getDetailsConsultation.rejected, (state, action) => {
+        state.status.getDetails = "failed";
         if (action.payload) {
-          state.error.create = { message: "Failed to create assurance" };
+          state.error.getDetails = { message: "Failed to fetch patient consultations" };
         }
-      });
+          });
 
-    builder
-      .addCase(updateConsultation.pending, (state) => {
-        state.status.update = "pending";
-        state.error.update = { message: null };
-      })
-      .addCase(updateConsultation.fulfilled, (state, action) => {
-        const id = action.payload?.data.id;
-        state.status.update = "succeeded";
-        if (action.payload) {
-          state.items = state.items.map((item) =>
-            item.id === id ? action.payload.data : item
-          );
-        }
-      })
-      .addCase(updateConsultation.rejected, (state, action) => {
-        state.status.update = "failed";
-        if (action.payload) {
-          state.error.update = { message: "failed to update user" };
-        }
-      });
+      builder
+        .addCase(getPatientConsultations.pending, (state) => {
+          state.status.getPatient = "pending";
+          state.error.getPatient = { message: null };
+        })
+        .addCase(getPatientConsultations.fulfilled, (state, action) => {
+          state.status.getPatient = "succeeded";
+          if (action.payload) {
+            state.PatientConsultations = action.payload.data;
+          }
+        })
+        .addCase(getPatientConsultations.rejected, (state, action) => {
+          state.status.getPatient = "failed";
+          if (action.payload) {
+            state.error.getPatient = { message: "Failed to get patient consultations" };
+          }
+        });
 
-    builder
-      .addCase(deleteConsultation.pending, (state) => {
-        state.status.delete = "pending";
-        state.error.delete = { message: null };
-      })
-      .addCase(deleteConsultation.fulfilled, (state, action) => {
-        state.status.delete = "succeeded";
-        if (action.payload) {
-          state.items = state.items.filter(
-            (item) => item.id !== action.payload.data.id
-          );
-        }
-      })
-      .addCase(deleteConsultation.rejected, (state, action) => {
-        state.status.delete = "failed";
-        if (action.payload) {
-          state.error.delete = { message: "Failed to delete patient" };
-        }
-      });
+      builder
+        .addCase(createConsultation.pending, (state) => {
+          state.status.create = "pending";
+          state.error.create = { message: null };
+        })
+        .addCase(createConsultation.fulfilled, (state, action) => {
+          state.status.create = "succeeded";
+          if (action.payload) {
+            state.items.unshift(action.payload.data);
+          }
+        })
+        .addCase(createConsultation.rejected, (state, action) => {
+          state.status.create = "failed";
+          if (action.payload) {
+            state.error.create = { message: "Failed to create assurance" };
+          }
+        });
+
+      builder
+        .addCase(updateConsultation.pending, (state) => {
+          state.status.update = "pending";
+          state.error.update = { message: null };
+        })
+        .addCase(updateConsultation.fulfilled, (state, action) => {
+          const id = action.payload?.data.id;
+          state.status.update = "succeeded";
+          if (action.payload) {
+            state.items = state.items.map((item) =>
+              item.id === id ? action.payload.data : item
+            );
+          }
+        })
+        .addCase(updateConsultation.rejected, (state, action) => {
+          state.status.update = "failed";
+          if (action.payload) {
+            state.error.update = { message: "failed to update user" };
+          }
+        });
+
+      builder
+        .addCase(deleteConsultation.pending, (state) => {
+          state.status.delete = "pending";
+          state.error.delete = { message: null };
+        })
+        .addCase(deleteConsultation.fulfilled, (state, action) => {
+          state.status.delete = "succeeded";
+          if (action.payload) {
+            state.items = state.items.filter(
+              (item) => item.id !== action.payload.data.id
+            );
+          }
+        })
+        .addCase(deleteConsultation.rejected, (state, action) => {
+          state.status.delete = "failed";
+          if (action.payload) {
+            state.error.delete = { message: "Failed to delete patient" };
+          }
+        });
   },
 });
 

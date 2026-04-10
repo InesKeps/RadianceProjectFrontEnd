@@ -1,22 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
-import type { Assurance, AssuranceDto, AssuranceDtoUpdate } from "../../types/historique";
+import type { Assurance, AssuranceDto, AssuranceDtoUpdate } from "../../types/patientdata";
 import type { ApiResponse } from "../../types/base";
+import fetchWithAuth from "@/services/fetchwithauth.service";
 
 export const getAllAssurances = createAsyncThunk<ApiResponse<Assurance[]>,void,{state: RootState}>(
   "assurance/getAllAssurances",
   async (_,apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/assurances`,
         {
           method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
         }
       );
 
@@ -43,17 +38,11 @@ export const createAssurance = createAsyncThunk<ApiResponse<Assurance>, Assuranc
   async (data,apiThunk) => {
 
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/assurances/create`,
         {
           method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
+          headers: {"Content-Type": "application/json",},
           body: JSON.stringify(data),
         }
       );
@@ -81,17 +70,11 @@ export const updateAssurance = createAsyncThunk<ApiResponse<Assurance>, Assuranc
   async (data,apiThunk) => {
 
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/assurances/update/${data.id}`,
         {
           method: "PUT",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
+          headers: {"Content-Type": "application/json",},
           body: JSON.stringify(data),
         }
       );
@@ -118,17 +101,11 @@ export const deleteAssurance = createAsyncThunk<ApiResponse<Assurance>, number,{
   "user/deleteAssurance",
   async (id, apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/assurances/delete/${id}`,
         {
           method: "DELETE",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-        },
+          headers: {"Content-Type": "application/json",},
         }
       );
 

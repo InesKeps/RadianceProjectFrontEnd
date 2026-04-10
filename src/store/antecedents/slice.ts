@@ -6,7 +6,7 @@ import {
   deleteAntecedent,
 } from "./actions";
 import type { ApiError, statusType } from "../../types/base";
-import type { Antecedent } from "../../types/historique";
+import type { Antecedent } from "../../types/patientdata";
 
 export interface AntecedentState {
   items: Antecedent[];

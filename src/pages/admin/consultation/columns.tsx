@@ -1,7 +1,7 @@
 "use client"
 
 import { type ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -11,33 +11,54 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import useAppDispatch from "@/hooks/useAppDispatch";
-import { useNavigate } from "react-router"
-import type { User } from "@/types/user"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+import useAppSelector from "@/hooks/useAppSelector"
+import type { RootState } from "@/store/store"
+import { useNavigate } from "react-router-dom"
+import useRoutePrefix from "@/hooks/useRoutePrefix"
+import type { ConsultationDetails } from "@/types/consultationdatas"
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<ConsultationDetails>[] = [
   {
     accessorKey: "id",
-    header: "Nº",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nº
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
-    accessorKey: "dateTime",
-    header: "Date et Heure",
+    accessorKey: "dateHeure",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date et Heure
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "nomPatient",
-    header: "Nom du patient",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nom du patient
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "motif",
@@ -50,45 +71,33 @@ export const columns: ColumnDef<User>[] = [
    {
     id: "actions",
     cell: ({ row }) => {
-      const user = row.original
-      const dispatch = useAppDispatch();
+      const consultation = row.original
       const navigate = useNavigate();
+      const baseRoute = useRoutePrefix();
+      const consultations = useAppSelector((state: RootState) => state.consultation.items);
+      
+      const voirPatient = ( id: number) =>{
+        const consultation = consultations?.find(c => c.id === id);
+        navigate(`${baseRoute}/detailspatient/${consultation!.patient!.id}`);
+      }
 
       return (
         <div>
-          <AlertDialog>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate(`/admin/updateuser-form/${user.id}`)}>Modifier</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <AlertDialogTrigger className="text-red-500">Supprimer</AlertDialogTrigger>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Attention</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Cette action est irréversible. Ce patient et toutes les informations 
-                  le concernant seront supprimés définitivement de votre base de données. 
-                  C'est bien ce que vous voulez?
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                <AlertDialogAction className="bg-red-300">Oui, Supprimer</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={()=>{navigate(`${baseRoute}/detailsconsultation/${consultation.id}`)}}>Voir détails consultation</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={()=> voirPatient(consultation.id)}>Voir détails patient</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       )
     },

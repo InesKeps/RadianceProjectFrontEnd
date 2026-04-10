@@ -1,26 +1,15 @@
 import { FaUserLarge } from "react-icons/fa6";
 import { FaChevronCircleLeft } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { FaRegEdit } from "react-icons/fa";
-import { MdDeleteOutline } from "react-icons/md";
+// import { MdDeleteOutline } from "react-icons/md";
 import useAppDispatch from "@/hooks/useAppDispatch";
 import useAppSelector from "@/hooks/useAppSelector";
 import type { RootState } from "@/store/store";
 import { deletePatient, getPatientDetails } from "@/store/patients/actions";
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Formik, Form, FieldArray, Field, type FormikHelpers } from "formik";
 import {
   Card,
   CardAction,
@@ -36,22 +25,22 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
+  // AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { toast } from "sonner";
 import Assurance from "@/components/myComponents/assurance";
 import Antecedent from "@/components/myComponents/antecedent";
 import Allergie from "@/components/myComponents/allergie";
-import Consultation from "@/components/myComponents/consultation";
+import Consultation from "@/pages/admin/Patients/tableconsultation/consultation";
 
 const DetailsPatient = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const baseRoute = location.pathname.startsWith("/user") ? "/user" : "/admin";
   const dispatch = useAppDispatch();
 
   const patientDetails = useAppSelector((state: RootState) => state.patient.selectedPatient);
-
-  // const idPatient:number = patientDetails!.id;
 
   useEffect(() => {
     if (id) {
@@ -68,7 +57,7 @@ const DetailsPatient = () => {
 
     if (response.meta.requestStatus === "fulfilled") {
     toast.success("Patient supprimé avec succès.");
-    navigate('/admin/patients')
+    navigate(`${baseRoute}/patients`)
     }
 
     if (response.meta.requestStatus === "rejected") {
@@ -81,7 +70,7 @@ const DetailsPatient = () => {
       <AlertDialog>
         <button
           type="button"
-          onClick={() => navigate("/admin/patients")}
+          onClick={() => navigate(`${baseRoute}/patients`)}
           className="absolute top-4 left-4 text-[#0DABCB] text-2xl cursor-pointer"
         >
           <FaChevronCircleLeft />
@@ -92,8 +81,8 @@ const DetailsPatient = () => {
         <section className="flex w-full h-full gap-4">
           <Card className="flex flex-col gap-4 items-center w-1/4 shadow-md overflow-y-auto bg-[#f7f9fa] relative">
             <CardAction className="flex absolute right-4 top-4 gap-2">
-              <button onClick={() => navigate(`/admin/updatepatient-form/${patientDetails.id}`)} className="text-[#0DABCB] text-xl hover:text-[#07c6ec] cursor-pointer"><FaRegEdit /></button>
-              <AlertDialogTrigger className="text-red-500 text-xl hover:text-red-600 cursor-pointer"><MdDeleteOutline /></AlertDialogTrigger>
+              <button onClick={() => navigate(`${baseRoute}/updatepatient-form/${patientDetails.id}`)} className="text-[#0DABCB] text-xl hover:text-[#07c6ec] cursor-pointer"><FaRegEdit /></button>
+              {/* <AlertDialogTrigger className="text-red-500 text-xl hover:text-red-600 cursor-pointer"><MdDeleteOutline /></AlertDialogTrigger> */}
             </CardAction>
             <div className="flex justify-center items-center rounded-full mb-2 w-20 h-20 bg-[#0caccc]">
               <FaUserLarge className="text-white text-4xl" />
@@ -109,7 +98,8 @@ const DetailsPatient = () => {
               </div>
               <div className="flex gap-2"><p className="font-medium">Genre:</p><p>{patientDetails.genre}</p></div>
               <div className="flex gap-2"><p className="font-medium">Téléphone:</p><p>{patientDetails.tel}</p></div>
-              <div className="flex gap-2"><p className="font-medium">Profession:</p><p>{patientDetails.profession}</p></div>
+              <div className="flex items-center gap-2"><p className="font-medium">Profession:</p>{patientDetails.profession? <p> {patientDetails.profession} </p> : <p className='text-xs font-medium text-[#727171]'> RAS </p>}</div>
+              <div className="flex items-center gap-2"><p className="font-medium">Société:</p>{patientDetails.societe? <p> {patientDetails.societe} </p> : <p className='text-xs font-medium text-[#727171]'> RAS </p>}</div>
               <div className="flex gap-2"><p className="font-medium">Nationalité:</p><p>{patientDetails.nationalite}</p></div>
             </CardContent>
           </Card>

@@ -8,6 +8,54 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+/* Exemple pour changer la couleur des boutons */
+.fc .fc-button {
+  background-color: #0DABCB; /* bleu */
+  color: white;
+  border: none;
+}
+
+.fc .fc-button:hover {
+  background-color: #2980b9; /* bleu foncé au hover */
+}
+
+.fc .fc-button-active { background-color: #0e6096 !important; /* orange par exemple */ color: #fff !important; }
+
+/* Exemple de thème personnalisé pour tippy */
+.tippy-box[data-theme~='rdv'] {
+  background-color: #fff; /* fond sombre */
+  color: black;            /* texte clair */
+  border: solid 2px;
+  border-color: #0DABCB;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.statut-PREVU {
+  color: #3498db; /* bleu */
+  font-weight: bold;
+}
+
+.statut-ANNULE {
+  color: #e74c3c; /* rouge */
+  font-weight: bold;
+}
+
+.statut-EFFECTUE {
+  color: #2ecc71; /* vert */
+  font-weight: bold;
+}
+
+
+
+.tippy-box[data-theme~='rdv'] .tippy-content strong {
+  color: #0DABCB; /* titre en orange */
+}
+
+.tippy-box[data-theme~='rdv'][data-placement^='top'] > .tippy-arrow {
+  border-top-color: #2c3e50; /* flèche assortie */
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

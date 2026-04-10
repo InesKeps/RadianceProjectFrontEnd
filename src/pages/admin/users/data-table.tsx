@@ -30,7 +30,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import {
   ChevronLeft,
   ChevronRight,
@@ -83,7 +83,7 @@ export function DataTable<TData, TValue>({
             <CardTitle>Liste des Membres du personnel</CardTitle>
             <CardDescription>
               <Input
-                placeholder="Rechercher un membre..."
+                placeholder="Rechercher un membre...(entrez le nom)"
                 value={(table.getColumn("nom")?.getFilterValue() as string) ?? ""}
                 onChange={(event) =>
                 table.getColumn("nom")?.setFilterValue(event.target.value)
@@ -138,7 +138,7 @@ export function DataTable<TData, TValue>({
                         ) : (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                            No results.
+                            Aucun utilisateur enregistré.
                             </TableCell>
                         </TableRow>
                         )}

@@ -1,27 +1,23 @@
 import * as React from "react"
-import {
-  IconInnerShadowTop,
-} from "@tabler/icons-react"
 
 import { NavMain } from "@/components/nav-main"
-import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { MdHealthAndSafety } from "react-icons/md";
 import { MdDashboard } from "react-icons/md";
 import { FaClipboardList } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
 import { IoIosStats } from "react-icons/io";
 import { FaUsers } from "react-icons/fa6";
 import { CgLogOut } from "react-icons/cg";
-import Utils from "@/helpers/Utils"
-import { useNavigate } from "react-router"
+import { logoutAction } from "@/store/auth/actions";
+import { toast } from "react-toastify";
+import useAppDispatch from "@/hooks/useAppDispatch";
 
 const data = {
   user: {
@@ -41,29 +37,41 @@ const data = {
        icon: <FaClipboardList/>,
      },
      {
-       title: "Consultation",
+       title: "Consultations",
        url: "/admin/consultation",
-       icon: <FaCalendarAlt/>,
+       icon: <MdHealthAndSafety/>,
      },
      {
-       title: "Statistiques",
-       url: "/admin/statistiques",
-       icon: <IoIosStats/>,
+       title: "Agenda",
+       url: "/admin/rdv",
+       icon: <FaCalendarAlt/>,
      },
      {
        title: "Personnel",
        url: "/admin/personnel",
        icon: <FaUsers/>,
      },
+     {
+       title: "Données",
+       url: "/admin/donnees",
+       icon: <IoIosStats/>,
+     },
   ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  function handleDelete(){
-    Utils.clearAuthInfo();
-    navigate("/login")
+  const handleLogout = async () => {
+    const response = await dispatch(logoutAction());
+    
+    if (response.meta.requestStatus === "fulfilled") {
+      toast.success("Déconnexion réussie.");
+    }
+
+    if (response.meta.requestStatus === "rejected") {
+      toast.error("Echec Déconnexion");
+    }
   }
 
   return (
@@ -77,12 +85,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain Links={data.Links} />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenuButton onClick={handleDelete} className="flex items-center justify-center gap-2 font-medium">
+        <SidebarMenuButton onClick={handleLogout} className="flex items-center cursor-pointer justify-center gap-2 font-medium">
           <CgLogOut />
           <p>Se déconnecter</p>
         </SidebarMenuButton>
-        {/* <NavUser user={data.user} /> */}
       </SidebarFooter>
     </Sidebar>
   )
 }
+

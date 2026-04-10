@@ -1,23 +1,18 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { RootState } from "../../store/store";
 import type { ApiResponse } from "../../types/base";
-import type { Allergie, AllergieDto, AllergieDtoUpdate } from "@/types/historique";
+import type { Allergie, AllergieDto, AllergieDtoUpdate } from "@/types/patientdata";
+import fetchWithAuth from "@/services/fetchwithauth.service";
 
 
 export const getAllAllergies = createAsyncThunk<ApiResponse<Allergie[]>,void,{state: RootState}>(
   "allergie/getAllAllergies",
   async (_,apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/allergies`,
         {
           method: "GET",
-          headers: {
-            accept: "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
         }
       );
 
@@ -44,17 +39,11 @@ export const createAllergie = createAsyncThunk<ApiResponse<Allergie>, AllergieDt
   async (data,apiThunk) => {
 
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/allergies/create`,
         {
           method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
+          headers: {"Content-Type": "application/json",},
           body: JSON.stringify(data),
         }
       );
@@ -82,17 +71,11 @@ export const updateAllergie = createAsyncThunk<ApiResponse<Allergie>, AllergieDt
   async (data,apiThunk) => {
 
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/allergies/update/${data.id}`,
         {
           method: "PUT",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
+          headers: {"Content-Type": "application/json",},
           body: JSON.stringify(data),
         }
       );
@@ -119,17 +102,11 @@ export const deleteAllergie = createAsyncThunk<ApiResponse<Allergie>, number,{st
   "allergie/deleteAllergie",
   async (id, apiThunk) => {
     try {
-      const token = apiThunk.getState().auth.userInfo?.token;
-
-      const response = await fetch(
+      const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/allergies/delete/${id}`,
         {
           method: "DELETE",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-        },
+          headers: {"Content-Type": "application/json",}
         }
       );
 

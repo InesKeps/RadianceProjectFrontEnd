@@ -6,7 +6,7 @@ import {
   deleteMotif,
 } from "./actions";
 import type { ApiError, statusType } from "../../types/base";
-import type { Motif } from "@/types/data";
+import type { Motif } from "@/types/consultationdatas";
 
 export interface MotifState {
   items: Motif[];

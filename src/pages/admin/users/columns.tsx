@@ -1,7 +1,7 @@
 "use client"
 
 import { type ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -14,7 +14,7 @@ import {
 import useAppDispatch from "../../../hooks/useAppDispatch";
 import { deleteUser } from "../../../store/users/actions";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import type { User } from "@/types/user"
 import {
   AlertDialog,
@@ -27,15 +27,36 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { logoutAction } from "@/store/auth/actions"
 
 export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "id",
-    header: "Nº",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nº
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "nom",
-    header: "Nom",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nom
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "tel",
@@ -59,12 +80,12 @@ export const columns: ColumnDef<User>[] = [
       const user = row.original
       const dispatch = useAppDispatch();
       const navigate = useNavigate();
-
+ 
       const handleDelete = async ()=>{
-        const response = await dispatch(deleteUser(user.id));
+        const response = await dispatch(logoutAction());
 
         if (response.meta.requestStatus === "fulfilled") {
-        toast.success("Membre supprimé avec succès.");
+        toast.success("Déconnexion reussie.");
         }
 
         if (response.meta.requestStatus === "rejected") {
@@ -88,7 +109,7 @@ export const columns: ColumnDef<User>[] = [
                 <DropdownMenuItem onClick={() => navigate(`/admin/updateuser-form/${user.id}`)}>Modifier</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <AlertDialogTrigger className="text-red-500">Supprimer</AlertDialogTrigger>
+                  {/* <AlertDialogTrigger className="text-red-500">Supprimer</AlertDialogTrigger> */}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -96,7 +117,7 @@ export const columns: ColumnDef<User>[] = [
               <AlertDialogHeader>
                 <AlertDialogTitle>Attention</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Cette action est irréversible. Ce patient et toutes les informations 
+                  Cette action est irréversible. Cet utilisateur et toutes les informations 
                   le concernant seront supprimés définitivement de votre base de données. 
                   C'est bien ce que vous voulez?
                 </AlertDialogDescription>

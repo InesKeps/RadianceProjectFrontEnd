@@ -12,7 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+import useRoutePrefix from "@/hooks/useRoutePrefix"
 import type { Patient } from "@/types/patient";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -26,7 +27,7 @@ export const columns: ColumnDef<Patient>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          id
+          Nº
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -69,22 +70,15 @@ export const columns: ColumnDef<Patient>[] = [
     header: "Sexe",
   },
   {
-    accessorKey: "nationalite",
-    header: "Nationalité",
-  },
-  {
     accessorKey: "tel",
     header: "Téléphone",
-  },
-  {
-    accessorKey: "profession",
-    header: "Profession",
   },
    {
     id: "actions",
     cell: ({ row }) => {
       const patient = row.original
       const navigate = useNavigate();
+        const baseRoute = useRoutePrefix();
 
       return (
         <div>
@@ -98,7 +92,7 @@ export const columns: ColumnDef<Patient>[] = [
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate(`/admin/detailspatient/${patient.id}`)}>Voir détails</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate(`${baseRoute}/detailspatient/${patient.id}`)}>Voir détails</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
         </div>

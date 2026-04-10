@@ -30,7 +30,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
 import {
   ChevronLeft,
   ChevronRight,
@@ -44,6 +44,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import useRoutePrefix from "@/hooks/useRoutePrefix"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -75,6 +76,7 @@ export function DataTable<TData, TValue>({
   })
 
   const Navigate = useNavigate();
+  const baseRoute = useRoutePrefix();
 
   return (
     <div>
@@ -83,7 +85,7 @@ export function DataTable<TData, TValue>({
             <CardTitle>Liste des patients</CardTitle>
             <CardDescription>
               <Input
-                placeholder="Rechercher un patient..."
+                placeholder="Rechercher un patient... (entrez le nom du patient)"
                 value={(table.getColumn("nom")?.getFilterValue() as string) ?? ""}
                 onChange={(event) =>
                 table.getColumn("nom")?.setFilterValue(event.target.value)
@@ -94,7 +96,7 @@ export function DataTable<TData, TValue>({
             <CardAction>
               <button 
                 type="button"
-                onClick={() => Navigate("/admin/addpatient-form")}
+                onClick={() => Navigate(`${baseRoute}/addpatient-form`)}
                 className="bg-[#0DABCB] hover:bg-[#0DABCB]/80 cursor-pointer text-white font-medium px-3 py-1 rounded-md">
                 Ajouter un patient
               </button>
@@ -138,7 +140,7 @@ export function DataTable<TData, TValue>({
                         ) : (
                         <TableRow>
                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                            No results.
+                            Aucun patient enregistré.
                             </TableCell>
                         </TableRow>
                         )}

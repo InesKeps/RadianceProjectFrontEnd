@@ -1,9 +1,10 @@
 import { Formik, Form, type FormikHelpers } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import Input from "../../components/myComponents/input";
 import Password from "../../components/myComponents/password";
-import type { LoginDto } from "../../types/user";
+import type { ApiResponse } from "../../types/base";
+import type { AuthInfo, LoginDto } from "../../types/user";
 import { loginAction } from "../../store/auth/actions";
 import useAppDispatch from "../../hooks/useAppDispatch";
 import { toast } from "react-toastify";
@@ -43,11 +44,19 @@ const Login =()=>{
 
     if (response.meta.requestStatus === "fulfilled") {
       toast.success("Utilisateur connecté avec succès.");
-      navigate("/admin/dashboard");
+      const payload = response.payload as ApiResponse<AuthInfo> | undefined;
+      const userRole = payload?.data?.userToLogin?.role;
+      if (userRole === "MEDECIN") {
+        navigate("/admin/dashboard");
+      } else if (userRole === "ASSISTANT") {
+        navigate("/user/patients");
+      } else {
+        navigate("/forbidden");
+      }
     }
 
     if (response.meta.requestStatus === "rejected") {
-      toast.error("Echec de connexion.");
+      toast.error("Echec Informations incorrectes");
     }
 
     formikHelpers.setSubmitting(false);
@@ -59,7 +68,7 @@ const Login =()=>{
             <div className="w-1/2 flex p-16 justify-center items-center">
                 <img src="/logorad.png" alt="Logo du cabinet" />
             </div>
-            <div className="w-1/2 bg-[#edf8fa]">
+            <div className="w-1/2 bg-[#edf8fa] rounded-r-xl">
                 <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
                     {(formik) => (
                     <Form autoComplete="off" className="flex flex-col items-center justify-center w-full h-full">

@@ -14,8 +14,6 @@ export interface User {
 
 export interface AuthInfo {
   userToLogin: User;
-  token: string;
-  refreshToken: string;
 }
 
 
