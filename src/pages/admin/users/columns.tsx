@@ -14,7 +14,7 @@ import {
 import useAppDispatch from "../../../hooks/useAppDispatch";
 import { deleteUser } from "../../../store/users/actions";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router"
 import type { User } from "@/types/user"
 import {
   AlertDialog,
