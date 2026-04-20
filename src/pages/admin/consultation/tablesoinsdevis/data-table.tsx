@@ -61,7 +61,7 @@ import { getAllDents } from "@/store/dents/actions";
 import { toast } from "react-toastify";
 import { getDetailsConsultation } from "@/store/consultations/actions";
 import { createSoinDevis } from "@/store/devis/actions";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

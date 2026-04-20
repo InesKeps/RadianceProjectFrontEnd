@@ -77,12 +77,8 @@ export function DataTable<TData, TValue>({
   })
 
   const dispatch = useAppDispatch();
-  // const [consultationId, setConsultationId] = useState(0);
   const selectedConsultation = useAppSelector((state: RootState) => state.consultation.ConsultationDetails);
 
-  // if(selectedConsultation?.id){
-  //    setConsultationId(selectedConsultation.id)
-  // }
 
   const prescriptionInitialValues : PrescriptionDto = {
     nomMedicament: '', 

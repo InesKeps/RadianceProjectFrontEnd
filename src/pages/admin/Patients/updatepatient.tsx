@@ -1,6 +1,6 @@
 import { Formik, Form, type FormikHelpers } from "formik";
 import * as yup from "yup";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { FaChevronCircleLeft } from "react-icons/fa";
 import Input from "../../../components/myComponents/input";
 import useAppDispatch from "../../../hooks/useAppDispatch";
@@ -12,49 +12,15 @@ import useAppSelector from "@/hooks/useAppSelector";
 import type { RootState } from "@/store/store";
 import type { Sexe } from "@/types/user";
 import { Card } from "@/components/ui/card";
-// import { useEffect, useState } from "react";
 
 const UpdatePatient = () => {
     const { id } = useParams();
-    // const patientId = Number(id);
     const navigate = useNavigate();
     const location = useLocation();
     const baseRoute = location.pathname.startsWith("/user") ? "/user" : "/admin";
     const dispatch = useAppDispatch();
     const patients = useAppSelector((state: RootState) => state.patient.items);
     const patientToUpdate = patients.find((patient) => patient.id === Number(id));
-    // const [formUpdate, setFormUpdate] = useState({
-    //     id: Number(id),
-    //     nom: "",
-    //     prenom:"",
-    //     adresse: "",
-    //     dateNaissance: "",
-    //     genre: "" as Sexe,
-    //     tel: "",
-    //     profession: "",
-    //     societe: "",
-    //     nationalite: "",
-    // });
-
-    // useEffect(() => {
-    //     if (patientId !== 0) {
-    //       const patientToUpdate = patients.find((patient) => patient.id === patientId);
-    //       if (patientToUpdate) setFormUpdate({
-    //         id: Number(id),
-    //         nom: patientToUpdate.nom,
-    //         prenom: patientToUpdate.prenom,
-    //         adresse: patientToUpdate.adresse,
-    //         dateNaissance: patientToUpdate.dateNaissance,
-    //         genre: patientToUpdate.genre,
-    //         tel: patientToUpdate.tel,
-    //         profession: patientToUpdate?.profession || "",
-    //         societe: patientToUpdate?.societe || "",
-    //         nationalite: patientToUpdate?.nationalite,
-    //       });
-    //     }
-    // }, [patientId]);
-
-    // const initialValues: PatientDtoUpdate = formUpdate;
     
     const initialValues: PatientDtoUpdate =  {
         id: Number(id),

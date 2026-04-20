@@ -43,7 +43,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "../../../../components/ui/input";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import useRoutePrefix from "@/hooks/useRoutePrefix"
 import useAppSelector from "@/hooks/useAppSelector"
 import type { RootState } from "@/store/store"

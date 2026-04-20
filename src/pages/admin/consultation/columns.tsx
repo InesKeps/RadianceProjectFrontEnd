@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import useAppSelector from "@/hooks/useAppSelector"
 import type { RootState } from "@/store/store"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router"
 import useRoutePrefix from "@/hooks/useRoutePrefix"
 import type { ConsultationDetails } from "@/types/consultationdatas"
 

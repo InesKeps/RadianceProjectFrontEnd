@@ -48,7 +48,7 @@ import useAppDispatch from "@/hooks/useAppDispatch";
 import { Card} from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import * as yup from "yup";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { FaChevronCircleLeft } from "react-icons/fa";
 import useAppSelector from "@/hooks/useAppSelector";
 import type { RootState } from "@/store/store";
