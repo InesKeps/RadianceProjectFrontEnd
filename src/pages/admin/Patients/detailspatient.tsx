@@ -1,6 +1,6 @@
 import { FaUserLarge } from "react-icons/fa6";
 import { FaChevronCircleLeft } from "react-icons/fa";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";

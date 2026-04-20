@@ -1,6 +1,6 @@
 import { Formik, Form, FieldArray, Field } from "formik";
 import * as yup from "yup";
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router"
 import { FaChevronCircleLeft } from "react-icons/fa";
 import Input from "@/components/myComponents/input";
 import Select from "@/components/select";

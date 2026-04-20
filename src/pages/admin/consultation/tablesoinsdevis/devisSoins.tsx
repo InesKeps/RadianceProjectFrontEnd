@@ -6,7 +6,7 @@ import { columns} from "./columns";
 import { useEffect } from "react";
 import useAppDispatch from "@/hooks/useAppDispatch";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import useRoutePrefix from "@/hooks/useRoutePrefix";
 import { getAllSoinsDevis } from "@/store/devis/actions";
 

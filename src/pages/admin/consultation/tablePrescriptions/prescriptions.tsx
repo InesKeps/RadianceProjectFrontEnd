@@ -6,7 +6,7 @@ import useAppDispatch from "@/hooks/useAppDispatch";
 import { useEffect } from "react";
 import { getConsultationPrescriptions } from "@/store/prescriptions/actions";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import useRoutePrefix from "@/hooks/useRoutePrefix";
 interface Props {
   id: number;
