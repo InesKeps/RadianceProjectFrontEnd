@@ -1,6 +1,6 @@
 import { Formik, Form, type FormikHelpers } from "formik";
 import * as yup from "yup";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import Input from "../../../components/myComponents/input";
 import Password from "../../../components/myComponents/password";
 import type { Role, Sexe, UserDtoUpdate } from "../../../types/user";

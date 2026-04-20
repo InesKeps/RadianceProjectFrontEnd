@@ -30,7 +30,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router"
 import {
   ChevronLeft,
   ChevronRight,
