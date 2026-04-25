@@ -2,7 +2,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { FaWhatsapp } from "react-icons/fa";
 import { FaPhone } from "react-icons/fa6";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import useAppDispatch from "@/hooks/useAppDispatch";
 import useAppSelector from "@/hooks/useAppSelector";
 import { useEffect, useRef } from "react";

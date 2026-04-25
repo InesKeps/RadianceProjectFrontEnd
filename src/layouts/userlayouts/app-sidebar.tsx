@@ -15,7 +15,7 @@ import { FaCalendarAlt } from "react-icons/fa"
 import { IoIosStats } from "react-icons/io"
 import { CgLogOut } from "react-icons/cg"
 import Utils from "@/helpers/Utils"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router"
 
 const data = {
   user: {
