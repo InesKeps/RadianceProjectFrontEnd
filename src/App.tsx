@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router";
 import AdminLayout from "./layouts/adminlayouts/AdminDashboardLayouts";
 import Dashboard from "./pages/admin/dashboard/dashboard";
 import PatientList from "./pages/admin/Patients/patientList";
