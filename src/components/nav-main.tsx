@@ -4,7 +4,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 
 export function NavMain({
   Links,
