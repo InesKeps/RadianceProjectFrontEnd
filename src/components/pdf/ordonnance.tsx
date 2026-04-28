@@ -24,16 +24,6 @@ const Ordonnance = () => {
     const dispatch = useAppDispatch();
     const ConsultationDetails = useAppSelector((state: RootState) => state.consultation.ConsultationDetails)
     const Prescriptions = useAppSelector((state: RootState) => state.prescription.items);
-    function getCurrentDateTimeLocal() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, "0");
-        const day = String(now.getDate()).padStart(2, "0");
-        const hours = String(now.getHours()).padStart(2, "0");
-        const minutes = String(now.getMinutes()).padStart(2, "0");
-
-        return `${day}/${month}/${year} ${hours}:${minutes}`;
-    }
 
     useEffect(() => {
         if (id) {
@@ -89,11 +79,9 @@ const Ordonnance = () => {
             <div className="flex flex-col gap-8 p-4 h-[70%]">
                 <div className="flex justify-between">
                     <p></p>
-                    {ConsultationDetails?.dateHeure ? (
-                        <p className="font-medium">Date : {format(new Date(getCurrentDateTimeLocal()), "dd/MM/yyyy", { locale: fr })}</p>
-                    ) : (
-                    <p></p>
-                    )}
+                    <p className="font-medium">
+                    Date : {format(new Date(), "dd/MM/yyyy", { locale: fr })}
+                    </p>
                 </div>
                 <div>
                     <p className="font-medium">Nom du patient: {ConsultationDetails?.patient.nom} {ConsultationDetails?.patient.prenom}</p>

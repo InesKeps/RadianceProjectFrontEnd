@@ -39,7 +39,7 @@ export const createUser = createAsyncThunk<ApiResponse<User>, UserDto,{state: Ro
 
     try {
       const response = await fetchWithAuth(
-        `${import.meta.env.VITE_API_URL}/users`,
+        `${import.meta.env.VITE_API_URL}/users/create`,
         {
           method: "POST",
           headers: {"Content-Type": "application/json",},

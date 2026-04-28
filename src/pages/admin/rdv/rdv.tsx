@@ -143,12 +143,6 @@ const handleSubmitRDV = async (
                     type="text"
                     placeholder="Entrez l'objet du RDV"
                   />
-                  {/* <label className="font-medium text-sm flex items-center gap-2" htmlFor="objet">Objet</label>
-                  <textarea
-                    className="w-full outline-none py-1 px-3 shadow-sm bg-white rounded-sm border border-[#ebebeb] placeholder:text-xs"
-                    name="objet"
-                    placeholder="Entrez l'objet du RDV"
-                  /> */}
                 </div>
               </div>
 
