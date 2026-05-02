@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import Input from "@/components/myComponents/input";
 import type { RDVUpdateDto } from "@/types/rdv";
 import { toast } from "react-toastify";
+import { format } from "date-fns";
 
 export const RDVCalendar = () => {
   const dispatch = useAppDispatch();
@@ -82,6 +83,7 @@ const handleUpdateRDV = async (
     <FullCalendar
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
       initialView="timeGridWeek"
+      timeZone="local"
       eventTimeFormat={{ 
         hour: '2-digit', 
         minute: '2-digit', 
@@ -95,7 +97,9 @@ const handleUpdateRDV = async (
       }}
       events={events}
       eventClick={(info) => {
-        const formattedDate = info.event.start ? new Date(info.event.start).toISOString().slice(0,16): "";
+        const formattedDate = info.event.start 
+        ? format(info.event.start, "yyyy-MM-dd'T'HH:mm") 
+        : "";
         setSelectedRDV({ 
             id: info.event.id, 
             nom: info.event.title, 
@@ -109,10 +113,11 @@ const handleUpdateRDV = async (
       height="auto"
       eventDidMount={(info) => {
             const statut = info.event.extendedProps.statut;
+            const formattedDate = format(info.event.start!, "dd/MM/yyyy HH:mm");
             tippy(info.el, {
             content: `
                 <strong>${info.event.title}</strong><br/>
-                Date: ${info.event.start?.toLocaleString()}<br/>
+                Date: ${formattedDate}<br/>
                 Statut: <span class="statut-${statut}">${statut}</span><br/>
                 Objet: ${info.event.extendedProps.objet ?? "RAS"}
             `,
