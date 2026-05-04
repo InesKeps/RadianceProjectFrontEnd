@@ -1,5 +1,6 @@
 import { useField } from 'formik';
 import { useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 interface Props {
   label: string;
@@ -22,10 +23,11 @@ const Password = ({ label, name , placeholder}: Props) => {
           className="w-full outline-none py-1 px-3 bg-white shadow-sm rounded-full placeholder:text-xs"
           autoComplete='new-password'
         />
-        <span
+         <span
           onClick={() => setShow(!show)}
-          className="absolute right-2 top-2 cursor-pointer"
+          className="absolute right-3 top-2 cursor-pointer text-gray-600"
         >
+          {show ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
         </span>
       </div>
       {meta.touched && meta.error && <p className="text-red-500 text-xs">{meta.error}</p>}

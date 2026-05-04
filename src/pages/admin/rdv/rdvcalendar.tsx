@@ -23,7 +23,8 @@ import { Button } from "@/components/ui/button";
 import Input from "@/components/myComponents/input";
 import type { RDVUpdateDto } from "@/types/rdv";
 import { toast } from "react-toastify";
-import { format } from "date-fns";
+import { format, isValid, parse } from "date-fns";
+import * as yup from "yup";
 
 export const RDVCalendar = () => {
   const dispatch = useAppDispatch();
@@ -35,7 +36,34 @@ export const RDVCalendar = () => {
     dispatch(getAllRDV());
   }, [dispatch]);
 
-  console.log(rdvs);
+  const rdvSchema = yup.object().shape({
+    date: yup
+      .string()
+      .typeError("format incorrect. format attendu: dd/MM/yyyy HH:mm")
+      .transform((value, originalValue) => {
+        if (typeof originalValue === "string") {
+          const parsedDate = parse(originalValue, "dd/MM/yyyy HH:mm", new Date());
+          if (isValid(parsedDate)) {
+            return parsedDate;
+          }
+        }
+        return value;
+      })
+      .required("Entrez La date et l'heure du RDV."),
+  
+    statut: yup
+      .string()
+      .oneOf(["PREVU", "ANNULE", "EFFECTUE"], "Statut invalide")
+      .default("PREVU"),
+  
+    objet: yup
+      .string()
+      .nullable(),
+  
+    nom: yup
+      .string()
+      .nullable(),
+  });
   
   const events = rdvs.map((rdv) => ({
     id: rdv.id.toString(),
@@ -86,10 +114,10 @@ const handleUpdateRDV = async (
       timeZone="local"
       eventTimeFormat={{ 
         hour: '2-digit', 
-        minute: '2-digit', 
-        meridiem: false
+        minute: '2-digit',
+        hour12: false 
       }}
-      slotLabelFormat={{ hour: '2-digit', minute: '2-digit', meridiem: false }}
+      slotLabelFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
       headerToolbar={{
         left: "prev,next today",
         center: "title",
@@ -134,6 +162,7 @@ const handleUpdateRDV = async (
         </DialogHeader>
         <Formik
             initialValues={selectedRDV}
+            validationSchema={rdvSchema}
             onSubmit={handleUpdateRDV}
         >
             {(formik) => (
