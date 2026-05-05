@@ -260,7 +260,7 @@ const AddPatient = () =>{
             navigate(`${baseRoute}/patients`);
         }
         if (response.meta.requestStatus === "rejected") {
-            toast.error("Echec de création du membre.");
+            toast.error("Echec de création du patient.");
         }
     };
 

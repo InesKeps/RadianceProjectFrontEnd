@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button";
 import Input from "@/components/myComponents/input";
 import type { RDVUpdateDto } from "@/types/rdv";
 import { toast } from "react-toastify";
+import { format } from "date-fns";
+import * as yup from "yup";
 
 export const RDVCalendar = () => {
   const dispatch = useAppDispatch();
@@ -34,7 +36,24 @@ export const RDVCalendar = () => {
     dispatch(getAllRDV());
   }, [dispatch]);
 
-  console.log(rdvs);
+  const rdvSchema = yup.object().shape({
+    date: yup
+      .string()
+      .required("Entrez La date et l'heure du RDV."),
+  
+    statut: yup
+      .string()
+      .oneOf(["PREVU", "ANNULE", "EFFECTUE"], "Statut invalide")
+      .default("PREVU"),
+  
+    objet: yup
+      .string()
+      .nullable(),
+  
+    nom: yup
+      .string()
+      .nullable(),
+  });
   
   const events = rdvs.map((rdv) => ({
     id: rdv.id.toString(),
@@ -82,12 +101,13 @@ const handleUpdateRDV = async (
     <FullCalendar
       plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
       initialView="timeGridWeek"
+      timeZone="local"
       eventTimeFormat={{ 
         hour: '2-digit', 
-        minute: '2-digit', 
-        meridiem: false
+        minute: '2-digit',
+        hour12: false 
       }}
-      slotLabelFormat={{ hour: '2-digit', minute: '2-digit', meridiem: false }}
+      slotLabelFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
       headerToolbar={{
         left: "prev,next today",
         center: "title",
@@ -95,7 +115,9 @@ const handleUpdateRDV = async (
       }}
       events={events}
       eventClick={(info) => {
-        const formattedDate = info.event.start ? new Date(info.event.start).toISOString().slice(0,16): "";
+        const formattedDate = info.event.start 
+        ? format(info.event.start, "yyyy-MM-dd'T'HH:mm") 
+        : "";
         setSelectedRDV({ 
             id: info.event.id, 
             nom: info.event.title, 
@@ -109,10 +131,11 @@ const handleUpdateRDV = async (
       height="auto"
       eventDidMount={(info) => {
             const statut = info.event.extendedProps.statut;
+            const formattedDate = format(info.event.start!, "dd/MM/yyyy HH:mm");
             tippy(info.el, {
             content: `
                 <strong>${info.event.title}</strong><br/>
-                Date: ${info.event.start?.toLocaleString()}<br/>
+                Date: ${formattedDate}<br/>
                 Statut: <span class="statut-${statut}">${statut}</span><br/>
                 Objet: ${info.event.extendedProps.objet ?? "RAS"}
             `,
@@ -129,6 +152,7 @@ const handleUpdateRDV = async (
         </DialogHeader>
         <Formik
             initialValues={selectedRDV}
+            validationSchema={rdvSchema}
             onSubmit={handleUpdateRDV}
         >
             {(formik) => (

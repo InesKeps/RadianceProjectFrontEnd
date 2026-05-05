@@ -79,13 +79,13 @@ const AddUser =()=>{
         const response = await dispatch(createUser(values));
     
         if (response.meta.requestStatus === "fulfilled") {
-            toast.success("Membre créé avec succès.");
+            toast.success("Utilisateur créé avec succès.");
             formikHelpers.resetForm();
             navigate("/admin/personnel");
         }
     
         if (response.meta.requestStatus === "rejected") {
-            toast.error("Echec de création du membre.");
+            toast.error("Echec de création de l'utilisateur.");
         }
     
         formikHelpers.setSubmitting(false);
