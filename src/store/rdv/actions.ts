@@ -35,10 +35,11 @@ export const createRDV = createAsyncThunk<ApiResponse<RDV>, RDVDto, { state: Roo
   "rdv/createRDV",
   async (data, apiThunk) => {
     try {
+      data.date = new Date(data.date).toISOString();
 
       const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/rdv/create`, {
         method: "POST",
-        headers: {"Content-Type": "application/json",},
+        headers: { "Content-Type": "application/json", },
         body: JSON.stringify(data),
       });
 
@@ -64,10 +65,11 @@ export const updateRDV = createAsyncThunk<ApiResponse<RDV>, RDVUpdateDto, { stat
   "rdv/updateRDV",
   async (data, apiThunk) => {
     try {
+      data.date = data.date ? new Date(data.date).toISOString() : data.date;
 
       const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/rdv/update/${data.id}`, {
         method: "PUT",
-        headers: {"Content-Type": "application/json",},
+        headers: { "Content-Type": "application/json", },
         body: JSON.stringify(data),
       });
 
@@ -96,7 +98,7 @@ export const deleteRDV = createAsyncThunk<ApiResponse<RDV>, number, { state: Roo
 
       const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/rdv/delete/${id}`, {
         method: "DELETE",
-        headers: {"Content-Type": "application/json",},
+        headers: { "Content-Type": "application/json", },
       });
 
       if (!response.ok) {
