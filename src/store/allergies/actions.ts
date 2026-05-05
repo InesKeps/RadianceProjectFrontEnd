@@ -17,15 +17,12 @@ export const getAllAllergies = createAsyncThunk<ApiResponse<Allergie[]>,void,{st
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get all allergies: ", error);
         return apiThunk.rejectWithValue("Failed to get all allergies.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all allergies: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on get all allergies."
@@ -49,15 +46,12 @@ export const createAllergie = createAsyncThunk<ApiResponse<Allergie>, AllergieDt
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to create allergie: ", error);
         return apiThunk.rejectWithValue("Failed to create allergie.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create allergie: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on create allergie."
@@ -81,15 +75,12 @@ export const updateAllergie = createAsyncThunk<ApiResponse<Allergie>, AllergieDt
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to update allergie: ", error);
         return apiThunk.rejectWithValue("Failed to update allergie.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on update allergie: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on update allergie."
@@ -111,15 +102,12 @@ export const deleteAllergie = createAsyncThunk<ApiResponse<Allergie>, number,{st
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to delete allergie: ", error);
         return apiThunk.rejectWithValue("Failed to delete allergie.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on delete allergie: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on delete allergie."
       );

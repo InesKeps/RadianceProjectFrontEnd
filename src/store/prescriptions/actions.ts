@@ -17,15 +17,12 @@ export const getConsultationPrescriptions = createAsyncThunk<ApiResponse<Prescri
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get consultation prescriptions: ", error);
         return apiThunk.rejectWithValue("Failed to get consultation prescriptions.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get consultation prescriptions: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on get consultation prescriptions."
@@ -50,15 +47,12 @@ export const createPrescription = createAsyncThunk<ApiResponse<Prescription>, Pr
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to create prescription: ", error);
         return apiThunk.rejectWithValue("Failed to create prescription.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create prescription: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on create prescription."
@@ -83,15 +77,12 @@ export const updatePrescription = createAsyncThunk<ApiResponse<Prescription>,Pre
     );
 
     if (!response.ok) {
-      const error = await response.json();
-      console.log("Failed to update prescription: ", error);
       return apiThunk.rejectWithValue("Failed to update prescription.");
     }
     const result = await response.json();
 
     return result;
   } catch (error) {
-    console.log("Error on updating prescription: ", error);
     return apiThunk.rejectWithValue(
       (error as { message: string }).message || "Error on updating prescription."
     );
@@ -113,15 +104,12 @@ export const deletePrescription = createAsyncThunk<ApiResponse<Prescription>, nu
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to delete prescription: ", error);
         return apiThunk.rejectWithValue("Failed to delete prescription.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on delete prescription: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on delete prescription."
       );

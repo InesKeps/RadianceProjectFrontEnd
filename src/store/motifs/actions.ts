@@ -17,15 +17,12 @@ export const getAllMotifs = createAsyncThunk<ApiResponse<Motif[]>,void,{state: R
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get all motifs: ", error);
         return apiThunk.rejectWithValue("Failed to get all motifs.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all motifs: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on get all motifs."
@@ -39,7 +36,6 @@ export const createMotif = createAsyncThunk<ApiResponse<Motif>, MotifDto,{state:
   async (data,apiThunk) => {
 
     try {
-      console.log("error?");
       
       const response = await fetchWithAuth( `${import.meta.env.VITE_API_URL}/motifs/create`,
         {
@@ -50,15 +46,12 @@ export const createMotif = createAsyncThunk<ApiResponse<Motif>, MotifDto,{state:
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to create motif: ", error);
         return apiThunk.rejectWithValue("Failed to create motif.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create motif: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on create motif."
@@ -82,15 +75,12 @@ export const updateMotif = createAsyncThunk<ApiResponse<Motif>, Motif,{state: Ro
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to update motif: ", error);
         return apiThunk.rejectWithValue("Failed to update motif.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on update motif: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on update motif."
@@ -113,15 +103,12 @@ export const deleteMotif = createAsyncThunk<ApiResponse<Motif>, number,{state: R
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to delete motif: ", error);
         return apiThunk.rejectWithValue("Failed to delete motif.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on delete motif: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on delete motif."
       );

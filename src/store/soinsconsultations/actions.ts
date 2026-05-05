@@ -40,15 +40,12 @@ export const getAllSoinsConsultation = createAsyncThunk<ApiResponse<Consultation
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get all soins consultation: ", error);
         return apiThunk.rejectWithValue("Failed to get all soins consultation.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all soins consultation: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on get all soins consultation."
@@ -61,7 +58,6 @@ export const createSoinConsultation = createAsyncThunk<ApiResponse<ConsultationS
   "consultation/createSoinConsultation",
   async (data, apiThunk) => {
     try {
-      console.log(data);
       
       const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/soinsconsultations/create`,
@@ -73,15 +69,12 @@ export const createSoinConsultation = createAsyncThunk<ApiResponse<ConsultationS
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to add soin to consultation: ", error);
         return apiThunk.rejectWithValue("Failed to add soin to consultation.");
       }
 
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create soin consultation: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on create soin consultation."
@@ -104,18 +97,15 @@ export const deleteSoinConsultation = createAsyncThunk<ApiResponse<ConsultationS
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to add soin to consultation: ", error);
-        return apiThunk.rejectWithValue("Failed to add soin to consultation.");
+        return apiThunk.rejectWithValue("Failed to delete soin from consultation.");
       }
 
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create soin consultation: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
-          "Error on create soin consultation."
+          "Error on delete soin consultation."
       );
     }
   }

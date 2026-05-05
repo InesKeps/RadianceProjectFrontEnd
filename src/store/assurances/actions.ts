@@ -16,15 +16,12 @@ export const getAllAssurances = createAsyncThunk<ApiResponse<Assurance[]>,void,{
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get all assurances: ", error);
         return apiThunk.rejectWithValue("Failed to get all assurances.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all patients: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on get all patients."
@@ -48,15 +45,12 @@ export const createAssurance = createAsyncThunk<ApiResponse<Assurance>, Assuranc
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to create assurance: ", error);
         return apiThunk.rejectWithValue("Failed to create assurance.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create assurance: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on create assurance."
@@ -80,15 +74,12 @@ export const updateAssurance = createAsyncThunk<ApiResponse<Assurance>, Assuranc
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to update assurance: ", error);
         return apiThunk.rejectWithValue("Failed to update assurance.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on update assurance: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on update assurance."
@@ -110,15 +101,12 @@ export const deleteAssurance = createAsyncThunk<ApiResponse<Assurance>, number,{
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to delete assurance: ", error);
         return apiThunk.rejectWithValue("Failed to delete assurance.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on delete assurance: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on delete assurance."
       );

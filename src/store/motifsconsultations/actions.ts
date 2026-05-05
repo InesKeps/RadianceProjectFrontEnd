@@ -39,15 +39,12 @@ export const getAllMotifsConsultation = createAsyncThunk<ApiResponse<Consultatio
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get all motifs consultation: ", error);
         return apiThunk.rejectWithValue("Failed to get all motifs consultation.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all motifs consultation: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on get all motifs consultation."
@@ -69,13 +66,13 @@ export const createMotifConsultation = createAsyncThunk<ApiResponse<Consultation
           body: JSON.stringify(data), 
         } ); 
         
-        if (!response.ok) { 
-          const error = await response.json(); 
-          console.log("Failed to add motif to consultation: ", error); 
+        if (!response.ok) {
           return apiThunk.rejectWithValue("Failed to add motif to consultation."); 
-        } const result = await response.json(); return result; 
-      } catch (error) { 
-        console.log("Error on create motif consultation: ", error); 
+        } 
+        const result = await response.json(); 
+        return result;
+
+      } catch (error) {
         return apiThunk.rejectWithValue( 
           (error as { message: string }).message || 
           "Error on create motif consultation." 
@@ -96,13 +93,12 @@ export const deleteMotifConsultation = createAsyncThunk<ApiResponse<Consultation
           body: JSON.stringify(data), 
         } ); 
         
-        if (!response.ok) { 
-          const error = await response.json(); 
-          console.log("Failed to delete motif from consultation: ", error); 
+        if (!response.ok) {
           return apiThunk.rejectWithValue("Failed to delete motif from consultation."); 
-        } const result = await response.json(); return result; 
-      } catch (error) { 
-        console.log("Error on delete motif from consultation: ", error); 
+        } 
+        const result = await response.json(); 
+        return result; 
+      } catch (error) {
         return apiThunk.rejectWithValue( 
           (error as { message: string }).message || 
           "Error delete motif from consultation." 

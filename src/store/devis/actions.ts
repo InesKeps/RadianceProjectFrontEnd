@@ -17,15 +17,12 @@ export const getAllSoinsDevis = createAsyncThunk<ApiResponse<DevisSoins[]>,numbe
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get all soins devis: ", error);
         return apiThunk.rejectWithValue("Failed to get all soins devis.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all soins devis: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on get all soins devis."
@@ -49,15 +46,12 @@ export const createSoinDevis = createAsyncThunk<ApiResponse<DevisSoins>,DevisSoi
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to add soin to devis: ", error);
         return apiThunk.rejectWithValue("Failed to add soin to devis.");
       }
 
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on add soin to devis: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on add soin to devis."
@@ -84,15 +78,12 @@ export const deleteSoinDevis = createAsyncThunk<ApiResponse<DevisSoins>, number,
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to delete soin on devis: ", error);
         return apiThunk.rejectWithValue("Failed to delete soin on devis.");
       }
 
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Failed to delete soin on devis: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Failed to delete soin on devis."

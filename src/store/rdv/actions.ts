@@ -14,15 +14,12 @@ export const getAllRDV = createAsyncThunk<ApiResponse<RDV[]>, void, { state: Roo
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get all RDV: ", error);
         return apiThunk.rejectWithValue("Failed to get all RDV.");
       }
 
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on get all RDV: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on get all RDV."
       );
@@ -44,15 +41,12 @@ export const createRDV = createAsyncThunk<ApiResponse<RDV>, RDVDto, { state: Roo
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to create RDV: ", error);
         return apiThunk.rejectWithValue("Failed to create RDV.");
       }
 
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create RDV: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on create RDV."
       );
@@ -74,15 +68,12 @@ export const updateRDV = createAsyncThunk<ApiResponse<RDV>, RDVUpdateDto, { stat
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to update RDV: ", error);
         return apiThunk.rejectWithValue("Failed to update RDV.");
       }
 
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on update RDV: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on update RDV."
       );
@@ -102,15 +93,12 @@ export const deleteRDV = createAsyncThunk<ApiResponse<RDV>, number, { state: Roo
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to delete RDV: ", error);
         return apiThunk.rejectWithValue("Failed to delete RDV.");
       }
 
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on delete RDV: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on delete RDV."
       );

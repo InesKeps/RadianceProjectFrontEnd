@@ -17,8 +17,6 @@ export const loginAction = createAsyncThunk<ApiResponse<AuthInfo>, LoginDto>(
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to login user: ", error);
         return apiThunk.rejectWithValue("Failed to login user.");
       }
 
@@ -28,7 +26,6 @@ export const loginAction = createAsyncThunk<ApiResponse<AuthInfo>, LoginDto>(
       }
       return result;
     } catch (error) {
-      console.log("Error on login request: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Failed to login user due to network error."
       );
@@ -47,8 +44,6 @@ export const refreshAction = createAsyncThunk<ApiResponse<AuthInfo>>(
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to refresh token: ", error);
         return apiThunk.rejectWithValue("Failed to refresh token.");
       }
 
@@ -59,7 +54,6 @@ export const refreshAction = createAsyncThunk<ApiResponse<AuthInfo>>(
       }
       return result;
     } catch (error) {
-      console.log("Error on refresh request: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Failed to refresh token due to network error."
       );
@@ -80,7 +74,6 @@ export const logoutAction = createAsyncThunk<ApiResponse<null>>(
       if (!response.ok) {
         const error = await response.json();
         console.log("Failed to logout: ", error);
-        // Even if fails, proceed to clear local
       }
 
       Utils.clearAuthInfo();
@@ -90,7 +83,6 @@ export const logoutAction = createAsyncThunk<ApiResponse<null>>(
         error: null,
       };
     } catch (error) {
-      console.log("Error on logout request: ", error);
       Utils.clearAuthInfo();
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Failed to logout due to network error."

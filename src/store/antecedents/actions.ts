@@ -17,15 +17,12 @@ export const getAllAntecedents = createAsyncThunk<ApiResponse<Antecedent[]>,void
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get all antecedents: ", error);
         return apiThunk.rejectWithValue("Failed to get all antecedents.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all antecedents: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on get all antecedents."
@@ -49,15 +46,12 @@ export const createAntecedent = createAsyncThunk<ApiResponse<Antecedent>, Antece
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to create antecedent: ", error);
         return apiThunk.rejectWithValue("Failed to create antecedent.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create antecedent: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on create antecedent."
@@ -81,15 +75,12 @@ export const updateAntecedent = createAsyncThunk<ApiResponse<Antecedent>, Antece
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to update antecedent: ", error);
         return apiThunk.rejectWithValue("Failed to update antecedent.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on update antecedent: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on update antecedent."
@@ -111,15 +102,12 @@ export const deleteAntecedent = createAsyncThunk<ApiResponse<Antecedent>, number
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to delete antecedent: ", error);
         return apiThunk.rejectWithValue("Failed to delete antecedent.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on delete antecedent: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on delete antecedent."
       );

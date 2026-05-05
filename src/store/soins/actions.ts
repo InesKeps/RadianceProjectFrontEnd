@@ -17,15 +17,12 @@ export const getAllSoins = createAsyncThunk<ApiResponse<Soin[]>,void,{state: Roo
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get all soins: ", error);
         return apiThunk.rejectWithValue("Failed to get all soins.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all soins: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on get all soins."
@@ -39,7 +36,6 @@ export const createSoin = createAsyncThunk<ApiResponse<Soin>, SoinDto,{state: Ro
   async (data,apiThunk) => {
 
     try {
-      console.log("error?");
       
       const response = await fetchWithAuth(
         `${import.meta.env.VITE_API_URL}/soins/create`,
@@ -51,15 +47,12 @@ export const createSoin = createAsyncThunk<ApiResponse<Soin>, SoinDto,{state: Ro
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to create soin: ", error);
         return apiThunk.rejectWithValue("Failed to create soin.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create soin: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on create soin."
@@ -84,15 +77,12 @@ export const updateSoin = createAsyncThunk<ApiResponse<Soin>, Soin,{state: RootS
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to update soin: ", error);
         return apiThunk.rejectWithValue("Failed to update soin.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on update soin: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on update soin."
@@ -115,15 +105,12 @@ export const deleteSoin = createAsyncThunk<ApiResponse<Soin>, number,{state: Roo
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to delete soin: ", error);
         return apiThunk.rejectWithValue("Failed to delete soin.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on delete soin: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on delete soin."
       );

@@ -16,15 +16,12 @@ export const getAllDents = createAsyncThunk<ApiResponse<Dent[]>,void,{state: Roo
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get all dents: ", error);
         return apiThunk.rejectWithValue("Failed to get all dents.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all dents: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on get all dents."
@@ -48,15 +45,12 @@ export const createDent = createAsyncThunk<ApiResponse<Dent>, DentDto,{state: Ro
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to create dent: ", error);
         return apiThunk.rejectWithValue("Failed to create dent.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create dent: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on create dent."
@@ -81,15 +75,12 @@ export const updateDent = createAsyncThunk<ApiResponse<Dent>, Dent,{state: RootS
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to update dent: ", error);
         return apiThunk.rejectWithValue("Failed to update dent.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on update dent: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on update dent."
@@ -112,15 +103,12 @@ export const deleteDent = createAsyncThunk<ApiResponse<Dent>, number,{state: Roo
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to delete dent: ", error);
         return apiThunk.rejectWithValue("Failed to delete dent.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on delete dent: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on delete dent."
       );

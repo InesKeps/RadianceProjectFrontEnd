@@ -17,15 +17,12 @@ export const getAllPatients = createAsyncThunk<ApiResponse<Patient[]>,void,{stat
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get all patients: ", error);
         return apiThunk.rejectWithValue("Failed to get all patients.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on get all patients: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on get all patients."
@@ -43,8 +40,6 @@ export const getPatientDetails = createAsyncThunk<ApiResponse<PatientDetails>,nu
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to get patient details: ", error);
         return apiThunk.rejectWithValue("Failed to get patient details.");
       }
 
@@ -73,15 +68,12 @@ export const createPatient = createAsyncThunk<ApiResponse<Patient>, PatientDto,{
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to create patient: ", error);
         return apiThunk.rejectWithValue("Failed to create patient.");
       }
       
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create patient: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message ||
           "Error on create patient."
@@ -106,15 +98,12 @@ export const createPatientwithdetails = createAsyncThunk<ApiResponse<PatientDeta
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to create patient with details: ", error);
         return apiThunk.rejectWithValue("Failed to create patient with details.");
       }
 
       const result = await response.json();
       return result;
     } catch (error) {
-      console.log("Error on create patient with details: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on create patient with details."
       );
@@ -138,15 +127,12 @@ export const updatePatient = createAsyncThunk<ApiResponse<Patient>,PatientDtoUpd
     );
 
     if (!response.ok) {
-      const error = await response.json();
-      console.log("Failed to update patient: ", error);
       return apiThunk.rejectWithValue("Failed to update patient.");
     }
     const result = await response.json();
 
     return result;
   } catch (error) {
-    console.log("Error on updating patient: ", error);
     return apiThunk.rejectWithValue(
       (error as { message: string }).message || "Error on updating patient."
     );
@@ -167,15 +153,12 @@ export const deletePatient = createAsyncThunk<ApiResponse<Patient>, number,{stat
       );
 
       if (!response.ok) {
-        const error = await response.json();
-        console.log("Failed to delete patient: ", error);
         return apiThunk.rejectWithValue("Failed to delete patient.");
       }
       const result = await response.json();
 
       return result;
     } catch (error) {
-      console.log("Error on delete patient: ", error);
       return apiThunk.rejectWithValue(
         (error as { message: string }).message || "Error on delete patient."
       );
