@@ -25,13 +25,15 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  // AlertDialogTrigger,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { toast } from "sonner";
 import Assurance from "@/components/myComponents/assurance";
 import Antecedent from "@/components/myComponents/antecedent";
 import Allergie from "@/components/myComponents/allergie";
 import Consultation from "@/pages/admin/Patients/tableconsultation/consultation";
+import { MdDeleteOutline } from "react-icons/md";
+import { toast } from "react-toastify";
+import useAuth from "@/hooks/useAuth";
 
 const DetailsPatient = () => {
   const { id } = useParams();
@@ -39,6 +41,8 @@ const DetailsPatient = () => {
   const location = useLocation();
   const baseRoute = location.pathname.startsWith("/user") ? "/user" : "/admin";
   const dispatch = useAppDispatch();
+  const auth = useAuth();
+  const role = auth?.userInfo?.userToLogin?.role;
 
   const patientDetails = useAppSelector((state: RootState) => state.patient.selectedPatient);
 
@@ -82,7 +86,9 @@ const DetailsPatient = () => {
           <Card className="flex flex-col gap-4 items-center w-1/4 shadow-md overflow-y-auto bg-[#f7f9fa] relative">
             <CardAction className="flex absolute right-4 top-4 gap-2">
               <button onClick={() => navigate(`${baseRoute}/updatepatient-form/${patientDetails.id}`)} className="text-[#0DABCB] text-xl hover:text-[#07c6ec] cursor-pointer"><FaRegEdit /></button>
-              {/* <AlertDialogTrigger className="text-red-500 text-xl hover:text-red-600 cursor-pointer"><MdDeleteOutline /></AlertDialogTrigger> */}
+              {role === "MEDECIN" && (
+                <AlertDialogTrigger className="text-red-500 text-xl hover:text-red-600 cursor-pointer"><MdDeleteOutline /></AlertDialogTrigger>
+              )}
             </CardAction>
             <div className="flex justify-center items-center rounded-full mb-2 w-20 h-20 bg-[#0caccc]">
               <FaUserLarge className="text-white text-4xl" />

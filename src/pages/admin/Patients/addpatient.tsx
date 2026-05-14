@@ -410,7 +410,7 @@ const AddPatient = () =>{
                             </button>
                             <CardHeader className="font-medium text-xl text-center text-[#0caccc]">Ajouter une assurance</CardHeader>
                             <CardContent className="flex flex-col gap-4">
-                            <Input label="Type" name="type" type="text" placeholder="Entrez le type d'assurance"/>
+                            <Input label="Nom" name="type" type="text" placeholder="Entrez le nom de l'assurance"/>
                             <Input label="Matricule" name="matricule" type="text" placeholder="Entrez le matricule d'assuré" />
                             <Input label="Adresse" name="adresse" type="text" placeholder="Entrez l'adresse"/>
                             <Input label="Téléphone" name="tel" type="text" placeholder="Entrez le numéro de téléphone"/>
@@ -485,7 +485,7 @@ const AddPatient = () =>{
                             {patientData.assurance && (
                                 <div className="bg-white shadow rounded p-4">
                                     <h3 className="font-semibold text-[#0DABCB]">Assurance</h3>
-                                    <p><strong>Type :</strong> {patientData.assurance.type}</p>
+                                    <p><strong>Nom :</strong> {patientData.assurance.type}</p>
                                     <p><strong>Matricule :</strong> {patientData.assurance.matricule}</p>
                                     <p><strong>Adresse :</strong> {patientData.assurance.adresse}</p>
                                     <p><strong>Téléphone :</strong> {patientData.assurance.tel}</p>

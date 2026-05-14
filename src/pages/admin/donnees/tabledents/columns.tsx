@@ -21,7 +21,8 @@ import * as yup from "yup"
 import { toast } from "react-toastify"
 import useAppSelector from "@/hooks/useAppSelector"
 import type { RootState } from "@/store/store"
-import { updateDent } from "@/store/dents/actions"
+import { deleteDent, getAllDents, updateDent } from "@/store/dents/actions"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 
 export const columns: ColumnDef<Dent>[] = [
   {
@@ -72,7 +73,7 @@ export const columns: ColumnDef<Dent>[] = [
       const dent = row.original
       const dispatch = useAppDispatch();
       const dents = useAppSelector((state: RootState) => state.dent.items);
-      const [dentId, setDentId] = useState<number | null>(null);
+      const [dentId, setDentId] = useState<number>(0);
       const [formUpdateDent, setFormUpdateDent] = useState({id: 0, numero: 0, nom: ''});
 
       const dentSchema = yup.object().shape({
@@ -115,9 +116,23 @@ export const columns: ColumnDef<Dent>[] = [
         }
       };
 
+      const handleDeleteDent = async() =>{
+          const response = await dispatch(deleteDent(dentId));
+          
+          if (response.meta.requestStatus === "fulfilled") {
+              toast.success("Dent supprimée avec succès.");
+              dispatch(getAllDents());
+          }
+      
+          if (response.meta.requestStatus === "rejected") {
+              toast.error("Echec de suppression de la dent.");
+          }
+      }
+
       return (
         <div>
           <Dialog>
+            <AlertDialog>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
@@ -131,6 +146,10 @@ export const columns: ColumnDef<Dent>[] = [
                 <DropdownMenuItem>
                   <DialogTrigger onClick={()=>{setDentId(dent.id);}}>Modifier</DialogTrigger>
                 </DropdownMenuItem>
+                 {/* <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <AlertDialogTrigger className="text-red-500" onClick={()=>{setDentId(dent.id);}}>Supprimer</AlertDialogTrigger>
+                </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
             <DialogContent className="sm:max-w-[425px]">
@@ -156,6 +175,19 @@ export const columns: ColumnDef<Dent>[] = [
               )}
               </Formik>
             </DialogContent>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+              <AlertDialogTitle>Attention</AlertDialogTitle>
+              <AlertDialogDescription>
+                  Vous voulez vraiment supprimer cette dent?
+              </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteDent} className="bg-red-300">Oui, Supprimer</AlertDialogAction>
+              </AlertDialogFooter>
+          </AlertDialogContent>
+          </AlertDialog>
           </Dialog>
         </div>
       )

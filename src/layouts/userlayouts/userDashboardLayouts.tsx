@@ -18,8 +18,8 @@ export default function UserLayout() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar className="w-[20%]" variant="inset" />
-      <SidebarInset>
+      <AppSidebar className="z-0 w-[20%]" variant="inset" />
+      <SidebarInset className="z-10">
         <SiteHeader/>
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">

@@ -79,7 +79,6 @@ const App = () => {
             <Route path="consultation-form/:id" element={<AddConsultation />} />
             <Route path="detailsconsultation/:id" element={<DetailsConsultation />} />
             <Route path="rdv" element={<RendezVous />} />
-            <Route path="donnees" element={<Datas />} />
             <Route path="facture/:id" element={<Facture />} />
             <Route path="devis/:id" element={<Devis />} />
             <Route path="ordonnance/:id" element={<Ordonnance />} />

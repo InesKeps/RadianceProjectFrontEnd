@@ -131,7 +131,7 @@ const Assurance = () => {
                           className={`flex justify-between items-center p-1 text-sm border-b ${ass.isActive ? "" : "opacity-50 bg-gray-100"}`}
                         >
                         <div className="flex flex-col gap-2">
-                          <p className=""><span className="font-medium">Type:</span> {ass.type}</p>
+                          <p className=""><span className="font-medium">Nom:</span> {ass.type}</p>
                           <p className=""><span className="font-medium">Matricule:</span> {ass.matricule}</p>
                         </div>
                         <div className="flex flex-col gap-2">
@@ -164,7 +164,7 @@ const Assurance = () => {
                     <Formik initialValues={assuranceInitialValues} validationSchema={assuranceSchema} onSubmit={handleSubmitAssurance}>
                     {(formik) => (
                     <Form className="flex flex-col gap-6 w-[80%] mx-auto">
-                        <Input label="Type" name="type" type="text" placeholder="Entrez le type d'assurance"/>
+                        <Input label="Nom" name="type" type="text" placeholder="Entrez le nom de l'assurance"/>
                         <Input label="Matricule" name="matricule" type="text" placeholder="Entrez le matricule d'assuré" />
                         <Input label="Adresse" name="adresse" type="text" placeholder="Entrez l'adresse"/>
                         <Input label="Téléphone" name="tel" type="text" placeholder="Entrez le numéro de téléphone"/>
@@ -192,7 +192,7 @@ const Assurance = () => {
                     <Formik initialValues={assuranceToUpdateInitialValues} validationSchema={assuranceSchema} onSubmit={handleUpdateAssurance}>
                     {(formik) => (
                     <Form className="flex flex-col gap-6 w-[80%] mx-auto">
-                        <Input label="Type" name="type" type="text" placeholder="Entrez le type d'assurance"/>
+                        <Input label="Nom" name="type" type="text" placeholder="Entrez le nom de l'assurance"/>
                         <Input label="Matricule" name="matricule" type="text" placeholder="Entrez le matricule d'assuré" />
                         <Input label="Adresse" name="adresse" type="text" placeholder="Entrez l'adresse"/>
                         <Input label="Téléphone" name="tel" type="text" placeholder="Entrez le numéro de téléphone"/>

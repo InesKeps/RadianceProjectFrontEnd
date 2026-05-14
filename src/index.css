@@ -3,11 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-*{
-  -webkit-scrollbar: none;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
+
 /* Exemple pour changer la couleur des boutons */
 .fc .fc-button {
   background-color: #0DABCB; /* bleu */

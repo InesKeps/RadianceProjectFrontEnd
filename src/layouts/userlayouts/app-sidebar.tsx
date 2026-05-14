@@ -12,7 +12,6 @@ import { MdHealthAndSafety } from "react-icons/md"
 import { MdDashboard } from "react-icons/md"
 import { FaClipboardList } from "react-icons/fa"
 import { FaCalendarAlt } from "react-icons/fa"
-import { IoIosStats } from "react-icons/io"
 import { CgLogOut } from "react-icons/cg"
 import Utils from "@/helpers/Utils"
 import { useNavigate } from "react-router"
@@ -43,12 +42,7 @@ const data = {
       title: "Agenda",
       url: "/user/rdv",
       icon: <FaCalendarAlt />,
-    },
-    {
-      title: "Données",
-      url: "/user/donnees",
-      icon: <IoIosStats />,
-    },
+    }, 
   ],
 }
 

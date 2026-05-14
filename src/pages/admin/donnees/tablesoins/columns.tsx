@@ -19,9 +19,10 @@ import { Form, Formik, type FormikHelpers } from "formik"
 import Input from "@/components/myComponents/input"
 import * as yup from "yup"
 import { toast } from "react-toastify"
-import { updateSoin } from "@/store/soins/actions"
+import { deleteSoin, getAllSoins, updateSoin } from "@/store/soins/actions"
 import useAppSelector from "@/hooks/useAppSelector"
 import type { RootState } from "@/store/store"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 
 export const columns: ColumnDef<Soin>[] = [
   {
@@ -66,7 +67,7 @@ export const columns: ColumnDef<Soin>[] = [
       const soin = row.original
       const dispatch = useAppDispatch();
       const soins = useAppSelector((state: RootState) => state.soin.items);
-      const [soinId, setSoinId] = useState<number | null>(null);
+      const [soinId, setSoinId] = useState<number>(0);
       const [formUpdateSoin, setFormUpdateSoin] = useState({id: 0, codification: '', nom: '', tarif: 0});
 
       const soinSchema = yup.object().shape({
@@ -102,7 +103,6 @@ export const columns: ColumnDef<Soin>[] = [
       const formUpdateSoinInitialValues: Soin = formUpdateSoin!;
 
       const handleUpdateSoin = async (values: Soin,formikHelpers: FormikHelpers<Soin>)=>{
-        console.log(values);
         
         formikHelpers.setSubmitting(true);
         const response = await dispatch(updateSoin(values));
@@ -116,9 +116,23 @@ export const columns: ColumnDef<Soin>[] = [
         }
       };
 
+      const handleDeleteSoin = async() =>{
+        const response = await dispatch(deleteSoin(soinId));
+        
+        if (response.meta.requestStatus === "fulfilled") {
+            toast.success("Soin supprimé avec succès.");
+            dispatch(getAllSoins());
+        }
+    
+        if (response.meta.requestStatus === "rejected") {
+            toast.error("Echec de suppression du soin.");
+        }
+      }
+
       return (
         <div>
           <Dialog>
+          <AlertDialog>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
@@ -132,6 +146,10 @@ export const columns: ColumnDef<Soin>[] = [
                 <DropdownMenuItem>
                   <DialogTrigger onClick={()=>{setSoinId(soin.id);}}>Modifier</DialogTrigger>
                 </DropdownMenuItem>
+                {/* <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <AlertDialogTrigger className="text-red-500" onClick={()=>{setSoinId(soin.id);}}>Supprimer</AlertDialogTrigger>
+                </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
             <DialogContent className="sm:max-w-[425px]">
@@ -158,6 +176,19 @@ export const columns: ColumnDef<Soin>[] = [
               )}
               </Formik>
             </DialogContent>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+              <AlertDialogTitle>Attention</AlertDialogTitle>
+              <AlertDialogDescription>
+                  Vous voulez vraiment supprimer ce soin?
+              </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteSoin} className="bg-red-300">Oui, Supprimer</AlertDialogAction>
+              </AlertDialogFooter>
+          </AlertDialogContent>
+          </AlertDialog>
           </Dialog>
         </div>
       )

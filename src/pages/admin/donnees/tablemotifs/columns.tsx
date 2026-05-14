@@ -21,7 +21,8 @@ import * as yup from "yup"
 import { toast } from "react-toastify"
 import useAppSelector from "@/hooks/useAppSelector"
 import type { RootState } from "@/store/store"
-import { updateMotif } from "@/store/motifs/actions"
+import { deleteMotif, getAllMotifs, updateMotif } from "@/store/motifs/actions"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 
 export const columns: ColumnDef<Motif>[] = [
   {
@@ -58,7 +59,7 @@ export const columns: ColumnDef<Motif>[] = [
       const motif = row.original
       const dispatch = useAppDispatch();
       const motifs = useAppSelector((state: RootState) => state.motif.items);
-      const [motifId, setMotifId] = useState<number | null>(null);
+      const [motifId, setMotifId] = useState<number>(0);
       const [formUpdateMotif, setFormUpdateMotif] = useState({id: 0, nomMotif: ''});
 
       const motifSchema = yup.object().shape({
@@ -97,9 +98,23 @@ export const columns: ColumnDef<Motif>[] = [
         }
       };
 
+      const handleDeleteMotif = async() =>{
+          const response = await dispatch(deleteMotif(motifId));
+          
+          if (response.meta.requestStatus === "fulfilled") {
+              toast.success("Motif supprimé avec succès.");
+              dispatch(getAllMotifs());
+          }
+      
+          if (response.meta.requestStatus === "rejected") {
+              toast.error("Echec de suppression du motif.");
+          }
+      }
+
       return (
         <div>
           <Dialog>
+          <AlertDialog>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
@@ -113,6 +128,10 @@ export const columns: ColumnDef<Motif>[] = [
                 <DropdownMenuItem>
                   <DialogTrigger onClick={()=>{setMotifId(motif.id);}}>Modifier</DialogTrigger>
                 </DropdownMenuItem>
+                {/* <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <AlertDialogTrigger className="text-red-500" onClick={()=>{setMotifId(motif.id);}}>Supprimer</AlertDialogTrigger>
+                </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
             <DialogContent className="sm:max-w-[425px]">
@@ -137,6 +156,19 @@ export const columns: ColumnDef<Motif>[] = [
               )}
               </Formik>
             </DialogContent>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+              <AlertDialogTitle>Attention</AlertDialogTitle>
+              <AlertDialogDescription>
+                  Vous voulez vraiment supprimer ce motif?
+              </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteMotif} className="bg-red-300">Oui, Supprimer</AlertDialogAction>
+              </AlertDialogFooter>
+          </AlertDialogContent>
+          </AlertDialog>
           </Dialog>
         </div>
       )

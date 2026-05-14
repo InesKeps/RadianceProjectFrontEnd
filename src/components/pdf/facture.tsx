@@ -113,7 +113,7 @@ const Facture = () => {
                     {assurance ? (
                         <div>
                             <b>Assurance</b>
-                            <p><b>Type: </b>{assurance.type}</p>
+                            <p><b>Nom: </b>{assurance.type}</p>
                             <p><b>Adresse: </b>{assurance.adresse}</p>
                             <p><b>Tel: </b>{assurance.tel}</p>
                         </div>
